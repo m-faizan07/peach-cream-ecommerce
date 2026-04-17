@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shipping Method | Peach Cream</title>
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="checkout-layout">
+        <!-- Left: Form Section -->
+        <main class="checkout-main">
+            <div class="checkout-content">
+                <header class="checkout-header-centered">
+                    <a href="index.html" class="checkout-logo-centered">
+                        <img src="images/peachlogo.png" alt="Peach Cream Logo">
+                        <h1>Peach Cream</h1>
+                    </a>
+                    <nav class="checkout-breadcrumb-centered">
+                        <a href="cart.html">Cart</a>
+                        <span class="sep"><i class="fa-solid fa-chevron-right"></i></span>
+                        <a href="shipping.html">Information</a>
+                        <span class="sep"><i class="fa-solid fa-chevron-right"></i></span>
+                        <span class="active">Shipping</span>
+                        <span class="sep"><i class="fa-solid fa-chevron-right"></i></span>
+                        <span>Payment</span>
+                    </nav>
+                </header>
+
+                <div class="checkout-review-box">
+                    <div class="review-row">
+                        <span class="review-label">Contact</span>
+                        <span class="review-value">raam2@gmail.com</span>
+                        <a href="shipping.html" class="review-change">change</a>
+                    </div>
+                    <div class="review-row">
+                        <span class="review-label">Ship To</span>
+                        <span class="review-value">cdfdf, Lahore AL 35001, United States</span>
+                        <a href="shipping.html" class="review-change">change</a>
+                    </div>
+                </div>
+
+                <div class="shipping-method-section">
+                    <h2>Shipping Method</h2>
+                    <p class="shipping-sub">First Shipment</p>
+                    
+                    <div class="shipping-options-box">
+                        <label class="shipping-option">
+                            <input type="radio" name="shipping_method" value="free">
+                            <span class="radio-custom"></span>
+                            <div class="option-info">
+                                <span class="option-name">5 to 8 business days • Orders $99.01 and up</span>
+                            </div>
+                            <span class="option-price">FREE</span>
+                        </label>
+                        <label class="shipping-option selected">
+                            <input type="radio" name="shipping_method" value="priority" checked>
+                            <span class="radio-custom"></span>
+                            <div class="option-info">
+                                <span class="option-name">Priority 2-3 Business Days</span>
+                            </div>
+                            <span class="option-price">$10.00</span>
+                        </label>
+                    </div>
+
+                    <div class="recurring-shipments">
+                        <p class="shipping-sub">Recurring shipments</p>
+                        <div class="recurring-box">
+                            5 to 8 business days • Orders $99.01 and up
+                        </div>
+                    </div>
+                </div>
+
+                <div class="checkout-form-footer">
+                    <a href="shipping.html" class="return-link">
+                        <i class="fa-solid fa-chevron-left"></i>
+                        Return to information
+                    </a>
+                    <a href="payment.html" class="continue-btn" style="text-decoration:none; display:inline-block; text-align:center;">Continue To Payment</a>
+                </div>
+
+                <footer class="checkout-footer">
+                    <a href="#">Refund policy</a>
+                    <a href="#">Shipping policy</a>
+                    <a href="#">Privacy policy</a>
+                    <a href="#">Terms of service</a>
+                    <a href="#">Cancellations</a>
+                </footer>
+            </div>
+        </main>
+
+        <!-- Right: Order Summary Section -->
+        <aside class="order-summary">
+            <div class="summary-content">
+                <div class="summary-items">
+                    <div class="summary-item">
+                        <div class="item-img-box">
+                            <img src="images/what-make-you-happy.png" alt="Peach Cream">
+                            <span class="item-qty-badge">1</span>
+                        </div>
+                        <div class="item-info">
+                            <p class="item-name">Peach Cream</p>
+                            <p class="item-variant">1 Bottle</p>
+                        </div>
+                        <p class="item-price">$50.00</p>
+                    </div>
+                    <div class="summary-item">
+                        <div class="item-img-box">
+                            <img src="images/what-make-you-happy.png" alt="Peach Cream">
+                            <span class="item-qty-badge">1</span>
+                        </div>
+                        <div class="item-info">
+                            <p class="item-name">Peach Cream</p>
+                            <p class="item-variant">1 Bottle</p>
+                        </div>
+                        <p class="item-price">$50.00</p>
+                    </div>
+                </div>
+
+                <div class="summary-totals">
+                    <div class="total-row">
+                        <span>Subtotal</span>
+                        <span>$100.00</span>
+                    </div>
+                    <div class="total-row">
+                        <span>Shipping</span>
+                        <span>FREE</span>
+                    </div>
+                    <div class="total-row">
+                        <span>Estimated Taxes</span>
+                        <span>$12.00</span>
+                    </div>
+                    <div class="total-row grand-total">
+                        <span>Total</span>
+                        <div class="total-price">
+                            <span class="currency">USD</span>
+                            <span class="price">$112.00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+    
+    <script src="index.js"></script>
+</body>
+
+</html>
