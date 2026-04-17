@@ -17,7 +17,32 @@
 
     @include('frontend.components.footer')
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="js/index.js"></script>
+    @if (session('status'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: @json(session('status')),
+                    confirmButtonColor: '#111827'
+                });
+            });
+        </script>
+    @endif
+    @if ($errors->any())
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Something went wrong',
+                    text: @json($errors->first()),
+                    confirmButtonColor: '#111827'
+                });
+            });
+        </script>
+    @endif
     @stack('scripts')
 </body>
 </html>

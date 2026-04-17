@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
 use App\Http\Controllers\Frontend\CartController;
 use App\Http\Controllers\Frontend\CheckoutController;
+use App\Http\Controllers\Frontend\PublicFormController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,6 +26,8 @@ Route::middleware('no_admin_frontend')->group(function () {
     Route::view('/about', 'frontend.About')->name('frontend.about');
     Route::view('/product', 'frontend.Product-page')->name('frontend.product');
     Route::view('/contact', 'frontend.contactus')->name('frontend.contact');
+    Route::post('/newsletter', [PublicFormController::class, 'newsletter'])->name('frontend.newsletter.subscribe');
+    Route::post('/contact', [PublicFormController::class, 'contact'])->name('frontend.contact.submit');
     Route::get('/cart', [CartController::class, 'index'])->name('frontend.cart');
     Route::post('/cart/add', [CartController::class, 'add'])->name('frontend.cart.add');
     Route::post('/cart/update', [CartController::class, 'update'])->name('frontend.cart.update');

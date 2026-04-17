@@ -9,7 +9,7 @@ class NewsletterController extends Controller
 {
     public function index()
     {
-        $subscriptions = NewsletterSubscription::latest()->paginate(50);
+        $subscriptions = NewsletterSubscription::latest()->get();
         return view('admin-backend.newsletter-index', compact('subscriptions'));
     }
 }

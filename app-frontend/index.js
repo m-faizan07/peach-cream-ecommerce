@@ -79,6 +79,19 @@ function updateTrustCarousel() {
 // Carousel functionality for Stories Section
 let currentStoriesSlide = 0;
 
+function showUiMessage(type, text, title = null) {
+    if (window.Swal) {
+        window.Swal.fire({
+            icon: type,
+            title: title || (type === 'success' ? 'Success' : 'Error'),
+            text,
+            confirmButtonColor: '#111827'
+        });
+        return;
+    }
+    window.alert(text);
+}
+
 function updateStoriesCarousel() {
     // Update dots
     const storiesDots = document.querySelectorAll('.stories-section .carousel-dots .dot');
@@ -146,7 +159,7 @@ async function initializeApp() {
         newsletterForm.addEventListener('submit', function(e) {
             e.preventDefault();
             const email = this.querySelector('input[type="email"]').value;
-            alert(`Thank you for subscribing with: ${email}`);
+            showUiMessage('success', `Thank you for subscribing with: ${email}`);
             this.reset();
         });
     }

@@ -5,8 +5,9 @@
             <h3>Sign Up & Subscribe To Our Newsletter</h3>
             <p>Subscribe to our latest newsletter to get news about special discounts & upcoming sales.</p>
         </div>
-        <form class="newsletter-form">
-            <input type="email" placeholder="Your email address" required>
+        <form class="newsletter-form" method="POST" action="{{ route('frontend.newsletter.subscribe') }}">
+            @csrf
+            <input type="email" name="email" placeholder="Your email address" required>
             <button type="submit" class="subscribe-btn">Subscribe</button>
         </form>
     </div>

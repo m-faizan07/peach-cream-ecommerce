@@ -61,6 +61,19 @@ function updateTrustCarousel() {
 // Carousel functionality for Stories Section
 let currentStoriesSlide = 0;
 
+function showUiMessage(type, text, title = null) {
+    if (window.Swal) {
+        window.Swal.fire({
+            icon: type,
+            title: title || (type === 'success' ? 'Success' : 'Error'),
+            text,
+            confirmButtonColor: '#111827'
+        });
+        return;
+    }
+    window.alert(text);
+}
+
 function updateStoriesCarousel() {
     // Update dots
     const storiesDots = document.querySelectorAll('.stories-section .carousel-dots .dot');
@@ -399,7 +412,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const mobile = document.querySelector('input[type="tel"]')?.value?.trim() || '';
 
                 if (!email || !firstName || !lastName || !address || !city || !state || !zipcode || !mobile) {
-                    alert('Please fill first name, last name, address, city, state, ZIP code, and mobile to continue.');
+                    showUiMessage('error', 'Please fill first name, last name, address, city, state, ZIP code, and mobile to continue.');
                     return;
                 }
 
@@ -588,7 +601,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     stripeError.textContent = err.message || 'Payment failed.';
                     stripeError.style.display = 'block';
                 } else {
-                    alert(err.message || 'Payment failed.');
+                    showUiMessage('error', err.message || 'Payment failed.');
                 }
                 payBtn.disabled = false;
                 payBtn.textContent = originalText;

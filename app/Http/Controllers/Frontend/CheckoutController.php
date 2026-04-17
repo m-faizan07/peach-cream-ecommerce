@@ -197,7 +197,7 @@ class CheckoutController extends Controller
         }
 
         $this->createOrderFromSession('credit_card', 'stripe', $paymentIntentId, 'paid');
-        return redirect()->route('frontend.product')->with('status', 'Payment successful. Order placed.');
+        return redirect()->route('frontend.home')->with('status', 'Payment successful. Order placed.');
     }
 
     public function createStripeIntent(Request $request): JsonResponse
@@ -250,7 +250,7 @@ class CheckoutController extends Controller
 
         $this->createOrderFromSession('credit_card', 'stripe', $sessionId, 'paid');
 
-        return redirect()->route('frontend.product')->with('status', 'Payment successful. Order placed.');
+        return redirect()->route('frontend.home')->with('status', 'Payment successful. Order placed.');
     }
 
     public function stripeCancel(): RedirectResponse
@@ -275,7 +275,7 @@ class CheckoutController extends Controller
 
         $this->createOrderFromSession('paypal', 'paypal', $paypalOrderId, 'paid');
 
-        return redirect()->route('frontend.product')->with('status', 'Payment successful. Order placed.');
+        return redirect()->route('frontend.home')->with('status', 'Payment successful. Order placed.');
     }
 
     public function paypalCancel(): RedirectResponse
