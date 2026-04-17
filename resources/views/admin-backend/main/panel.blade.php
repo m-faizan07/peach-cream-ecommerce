@@ -5,6 +5,10 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.bootstrap5.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css">
 <style>
+    .avatar {
+        object-fit: cover;
+    }
+
     /* Keep DataTables pagination consistent even with global list styles */
     .dataTables_wrapper .dataTables_paginate ul.pagination {
         display: flex !important;
@@ -22,6 +26,57 @@
 
     .dataTables_wrapper .dataTables_paginate .page-link {
         border-radius: .375rem;
+    }
+
+    .dataTables_wrapper .dt-buttons {
+        display: flex !important;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        align-items: center;
+        gap: .35rem;
+        margin-bottom: .5rem;
+    }
+
+    .dataTables_wrapper .dt-buttons .btn {
+        margin: 0 !important;
+        width: auto !important;
+        min-width: 0 !important;
+        flex: 0 0 auto !important;
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+        padding: .35rem .6rem;
+        font-size: .8rem;
+        line-height: 1.2;
+    }
+
+    .dataTables_wrapper .dataTables_scrollBody {
+        overflow-x: auto !important;
+    }
+
+    @media (max-width: 768px) {
+        .dataTables_wrapper .dataTables_length,
+        .dataTables_wrapper .dataTables_filter {
+            width: 100%;
+            margin-bottom: .5rem;
+            text-align: left;
+        }
+
+        .dataTables_wrapper .dataTables_filter input,
+        .dataTables_wrapper .dataTables_length select {
+            width: 100%;
+            max-width: 100%;
+            margin-left: 0;
+        }
+
+        .dataTables_wrapper .dataTables_scrollBody {
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .dataTables_wrapper .dt-buttons .btn {
+            padding: .3rem .55rem;
+            font-size: .75rem;
+        }
     }
 </style>
 @endpush
@@ -65,15 +120,42 @@
             <a class="sidebar-toggle js-sidebar-toggle"><i class="hamburger align-self-center"></i></a>
             <div class="navbar-collapse collapse">
                 <ul class="navbar-nav navbar-align">
-                    <li class="nav-item">
-                        <form method="POST" action="{{ route('admin.logout') }}" class="m-0">
-                            @csrf
-                            <button class="btn btn-danger btn-sm" type="submit">Logout</button>
-                        </form>
+                    <li class="nav-item dropdown">
+                        <a class="nav-icon dropdown-toggle" href="#" id="alertsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <div class="position-relative">
+                                <i class="align-middle" data-feather="bell"></i>
+                                <span class="indicator">4</span>
+                            </div>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end py-2" aria-labelledby="alertsDropdown">
+                            <span class="dropdown-item-text text-muted small">4 new notifications</span>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-inline-block" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="{{ asset('frontend/images/doc.jpg') }}" class="avatar img-fluid rounded me-1" alt="Profile" width="36" height="36" />
+                            <span class="text-dark d-none d-md-inline">Charles Hall</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end">
+                            <a class="dropdown-item" href="#">
+                                <i class="align-middle me-1" data-feather="user"></i> Profile
+                            </a>
+                            <a class="dropdown-item" href="#">
+                                <i class="align-middle me-1" data-feather="settings"></i> Settings & Privacy
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('nav-logout-form').submit();">
+                                <i class="align-middle me-1" data-feather="log-out"></i> Log out
+                            </a>
+                        </div>
                     </li>
                 </ul>
             </div>
         </nav>
+
+        <form id="nav-logout-form" method="POST" action="{{ route('admin.logout') }}" class="d-none">
+            @csrf
+        </form>
 
         <main class="content">
             <div class="container-fluid p-0">

@@ -45,7 +45,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="text-center mb-3">Single admin login only.</div>
+						<!-- <div class="text-center mb-3">Single admin login only.</div> -->
 					</div>
 				</div>
 			</div>

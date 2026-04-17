@@ -5,7 +5,7 @@
 <div class="card">
     <div class="card-body">
         <div class="table-responsive">
-            <table id="orders-table" class="table table-striped table-bordered dt-responsive nowrap w-100">
+            <table id="orders-table" class="table table-striped table-bordered nowrap w-100">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -42,7 +42,9 @@
 <script>
     $(function () {
         $('#orders-table').DataTable({
-            responsive: true,
+            responsive: false,
+            scrollX: true,
+            autoWidth: false,
             pageLength: 10,
             lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
             dom: 'Bfrtip',
