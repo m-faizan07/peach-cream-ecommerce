@@ -92,31 +92,20 @@
                     <div class="summary-item">
                         <div class="item-img-box">
                             <img src="images/what-make-you-happy.png" alt="Peach Cream">
-                            <span class="item-qty-badge">1</span>
+                            <span class="item-qty-badge">{{ $qty }}</span>
                         </div>
                         <div class="item-info">
                             <p class="item-name">Peach Cream</p>
                             <p class="item-variant">1 Bottle</p>
                         </div>
-                        <p class="item-price">$50.00</p>
-                    </div>
-                    <div class="summary-item">
-                        <div class="item-img-box">
-                            <img src="images/what-make-you-happy.png" alt="Peach Cream">
-                            <span class="item-qty-badge">1</span>
-                        </div>
-                        <div class="item-info">
-                            <p class="item-name">Peach Cream</p>
-                            <p class="item-variant">1 Bottle</p>
-                        </div>
-                        <p class="item-price">$50.00</p>
+                        <p class="item-price">${{ number_format($subtotal, 2) }}</p>
                     </div>
                 </div>
 
                 <div class="summary-totals">
                     <div class="total-row">
                         <span>Subtotal</span>
-                        <span>$100.00</span>
+                        <span>${{ number_format($subtotal, 2) }}</span>
                     </div>
                     <div class="total-row">
                         <span>Shipping</span>
@@ -124,13 +113,13 @@
                     </div>
                     <div class="total-row">
                         <span>Estimated Taxes</span>
-                        <span>$12.00</span>
+                        <span>$0.00</span>
                     </div>
                     <div class="total-row grand-total">
                         <span>Total</span>
                         <div class="total-price">
                             <span class="currency">USD</span>
-                            <span class="price">$112.00</span>
+                            <span class="price">${{ number_format($subtotal, 2) }}</span>
                         </div>
                     </div>
                 </div>

@@ -118,14 +118,31 @@ async function initializeApp() {
         });
     });
 
-    // Newsletter form submission (now in footer)
-    const newsletterForm = document.querySelector('.newsletter-form');
-    if (newsletterForm) {
-        newsletterForm.addEventListener('submit', function(e) {
+    // Keep newsletter as normal backend submit when action exists.
+
+    // Product page Add To Cart button (keeps existing design, sends selected quantity).
+    const addToCartBtn = document.querySelector('.add-to-cart-btn');
+    const qtyInput = document.getElementById('qtyInput');
+    if (addToCartBtn && qtyInput && window.location.pathname === '/product') {
+        addToCartBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            const email = this.querySelector('input[type="email"]').value;
-            alert(`Thank you for subscribing with: ${email}`);
-            this.reset();
+            const qty = Math.max(parseInt(qtyInput.value || '1', 10), 1);
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/cart/add';
+            const token = document.createElement('input');
+            token.type = 'hidden';
+            token.name = '_token';
+            token.value = csrfToken;
+            const quantity = document.createElement('input');
+            quantity.type = 'hidden';
+            quantity.name = 'quantity';
+            quantity.value = String(qty);
+            form.appendChild(token);
+            form.appendChild(quantity);
+            document.body.appendChild(form);
+            form.submit();
         });
     }
 
@@ -272,4 +289,165 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+
+    // Cart quantity controls -> backend session update without changing markup.
+    window.updateCartQty = function(delta) {
+        const qtyInput = document.querySelector('.cart-item .qty-input');
+        if (!qtyInput) return;
+        let qty = parseInt(qtyInput.value || '1', 10) + delta;
+        if (qty < 1) qty = 1;
+        qtyInput.value = String(qty);
+
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '/cart/update';
+
+        const token = document.createElement('input');
+        token.type = 'hidden';
+        token.name = '_token';
+        token.value = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+
+        const q = document.createElement('input');
+        q.type = 'hidden';
+        q.name = 'quantity';
+        q.value = String(qty);
+
+        form.appendChild(token);
+        form.appendChild(q);
+        document.body.appendChild(form);
+        form.submit();
+    };
+
+    // Cart remove buttons clear cart.
+    document.querySelectorAll('.remove-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/cart/clear';
+
+            const token = document.createElement('input');
+            token.type = 'hidden';
+            token.name = '_token';
+            token.value = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+            form.appendChild(token);
+
+            document.body.appendChild(form);
+            form.submit();
+        });
+    });
+
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+
+    // Clear cart button in current static design.
+    const clearCartLink = document.getElementById('clear-cart-link');
+    if (clearCartLink) {
+        clearCartLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/cart/clear';
+            const token = document.createElement('input');
+            token.type = 'hidden';
+            token.name = '_token';
+            token.value = csrfToken;
+            form.appendChild(token);
+            document.body.appendChild(form);
+            form.submit();
+        });
+    }
+
+    // Shipping information step: submit using POST, not query string.
+    if (window.location.pathname === '/shipping') {
+        const continueBtn = document.querySelector('a.continue-btn');
+        if (continueBtn) {
+            continueBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const email = document.querySelector('input[type="email"]')?.value || 'guest@example.com';
+                const names = document.querySelectorAll('input[placeholder="First name"], input[placeholder="Last name"]');
+                const firstName = names[0]?.value || 'Guest';
+                const lastName = names[1]?.value || 'User';
+                const address = document.querySelector('input[placeholder="Address"]')?.value || 'Address';
+                const city = document.querySelector('input[placeholder="City"]')?.value || 'City';
+                const country = document.querySelector('.checkout-form select.form-input')?.value || 'United States';
+                const phone = document.querySelector('input[type="tel"]')?.value || '';
+
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/shipping';
+                const payload = {
+                    _token: csrfToken,
+                    email,
+                    phone,
+                    shipping_name: `${firstName} ${lastName}`.trim(),
+                    shipping_line1: address,
+                    shipping_city: city,
+                    shipping_country: country,
+                    billing_name: `${firstName} ${lastName}`.trim(),
+                    billing_line1: address,
+                    billing_city: city,
+                    billing_country: country
+                };
+                Object.entries(payload).forEach(([k, v]) => {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = k;
+                    input.value = String(v);
+                    form.appendChild(input);
+                });
+                document.body.appendChild(form);
+                form.submit();
+            });
+        }
+    }
+
+    // Shipping method step: submit selected option via POST.
+    if (window.location.pathname === '/checkout-shipping') {
+        const continueBtn = document.querySelector('a.continue-btn');
+        if (continueBtn) {
+            continueBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const selected = document.querySelector('input[name="shipping_method"]:checked')?.value || 'free';
+                const shippingMethod = selected === 'priority' ? 'paid' : selected;
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/checkout-shipping';
+                const token = document.createElement('input');
+                token.type = 'hidden';
+                token.name = '_token';
+                token.value = csrfToken;
+                const method = document.createElement('input');
+                method.type = 'hidden';
+                method.name = 'shipping_method';
+                method.value = shippingMethod;
+                form.appendChild(token);
+                form.appendChild(method);
+                document.body.appendChild(form);
+                form.submit();
+            });
+        }
+    }
+
+    // Payment step: submit selected method via POST.
+    if (window.location.pathname === '/payment' && payBtn) {
+        payBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const paymentMethod = document.querySelector('input[name="payment_method"]:checked')?.value || 'credit_card';
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/checkout-place-order';
+            const token = document.createElement('input');
+            token.type = 'hidden';
+            token.name = '_token';
+            token.value = csrfToken;
+            const method = document.createElement('input');
+            method.type = 'hidden';
+            method.name = 'payment_method';
+            method.value = paymentMethod;
+            form.appendChild(token);
+            form.appendChild(method);
+            document.body.appendChild(form);
+            form.submit();
+        });
+    }
 });

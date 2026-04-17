@@ -1,5 +1,12 @@
 <?php
 
+use App\Http\Controllers\Admin\AuthController as AdminAuthController;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\NewsletterController as AdminNewsletterController;
+use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
+use App\Http\Controllers\Frontend\CartController;
+use App\Http\Controllers\Frontend\CheckoutController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,27 +20,36 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::view('/', 'frontend.index')->name('frontend.home');
-Route::view('/about', 'frontend.About')->name('frontend.about');
-Route::view('/product', 'frontend.Product-page')->name('frontend.product');
-Route::view('/contact', 'frontend.contactus')->name('frontend.contact');
-Route::view('/cart', 'frontend.cart')->name('frontend.cart');
-Route::view('/empty-cart', 'frontend.empty-cart')->name('frontend.empty-cart');
-Route::view('/shipping', 'frontend.shipping')->name('frontend.shipping');
-Route::view('/checkout-shipping', 'frontend.checkout-shipping')->name('frontend.checkout-shipping');
-Route::view('/payment', 'frontend.payment')->name('frontend.payment');
+Route::middleware('no_admin_frontend')->group(function () {
+    Route::view('/', 'frontend.index')->name('frontend.home');
+    Route::view('/about', 'frontend.About')->name('frontend.about');
+    Route::view('/product', 'frontend.Product-page')->name('frontend.product');
+    Route::view('/contact', 'frontend.contactus')->name('frontend.contact');
+    Route::get('/cart', [CartController::class, 'index'])->name('frontend.cart');
+    Route::post('/cart/add', [CartController::class, 'add'])->name('frontend.cart.add');
+    Route::post('/cart/update', [CartController::class, 'update'])->name('frontend.cart.update');
+    Route::post('/cart/clear', [CartController::class, 'clear'])->name('frontend.cart.clear');
+    Route::view('/empty-cart', 'frontend.empty-cart')->name('frontend.empty-cart');
+    Route::match(['get', 'post'], '/shipping', [CheckoutController::class, 'shippingInfo'])->name('frontend.shipping');
+    Route::match(['get', 'post'], '/checkout-shipping', [CheckoutController::class, 'shippingMethod'])->name('frontend.checkout-shipping');
+    Route::match(['get', 'post'], '/payment', [CheckoutController::class, 'payment'])->name('frontend.payment');
+    Route::match(['get', 'post'], '/checkout-place-order', [CheckoutController::class, 'place'])->name('frontend.checkout.place');
+});
 
-Route::view('/dashboard', 'admin-backend.index')->name('admin.dashboard');
-Route::view('/dashboard/pages-profile', 'admin-backend.pages-profile')->name('admin.profile');
-Route::view('/dashboard/pages-sign-in', 'admin-backend.pages-sign-in')->name('admin.sign-in');
-Route::view('/dashboard/pages-sign-up', 'admin-backend.pages-sign-up')->name('admin.sign-up');
-Route::view('/dashboard/pages-blank', 'admin-backend.pages-blank')->name('admin.blank');
-Route::view('/dashboard/ui-buttons', 'admin-backend.ui-buttons')->name('admin.ui.buttons');
-Route::view('/dashboard/ui-forms', 'admin-backend.ui-forms')->name('admin.ui.forms');
-Route::view('/dashboard/ui-cards', 'admin-backend.ui-cards')->name('admin.ui.cards');
-Route::view('/dashboard/ui-typography', 'admin-backend.ui-typography')->name('admin.ui.typography');
-Route::view('/dashboard/icons-feather', 'admin-backend.icons-feather')->name('admin.icons.feather');
-Route::view('/dashboard/charts-chartjs', 'admin-backend.charts-chartjs')->name('admin.charts.chartjs');
-Route::view('/dashboard/maps-google', 'admin-backend.maps-google')->name('admin.maps.google');
-Route::view('/dashboard/upgrade-to-pro', 'admin-backend.upgrade-to-pro')->name('admin.upgrade');
+Route::get('/dashboard', fn () => redirect('/admin'))->name('admin.dashboard.legacy');
+
+Route::middleware('guest')->group(function () {
+    Route::get('/admin/login', [AdminAuthController::class, 'showLogin'])->name('admin.login');
+    Route::post('/admin/login', [AdminAuthController::class, 'login'])->name('admin.login.attempt');
+});
+
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
+    Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders.index');
+    Route::get('/reviews', [AdminReviewController::class, 'index'])->name('reviews.index');
+    Route::post('/reviews/{review}/approve', [AdminReviewController::class, 'approve'])->name('reviews.approve');
+    Route::post('/reviews/{review}/reject', [AdminReviewController::class, 'reject'])->name('reviews.reject');
+    Route::get('/subscribers', [AdminNewsletterController::class, 'index'])->name('subscribers.index');
+});
 

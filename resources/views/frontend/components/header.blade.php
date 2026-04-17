@@ -33,6 +33,7 @@
     <div class="nav-actions">
         <a href="{{ route('frontend.cart') }}" class="cart-btn">
             <i class="fa-solid fa-cart-shopping"></i>
+            <span style="font-size:11px; margin-left:6px;">{{ count(session('cart', [])) }}</span>
         </a>
         <a href="{{ route('frontend.product') }}" class="cta-btn">Get Peach Cream</a>
         <button class="mobile-menu-btn" id="mobile-menu-open">
