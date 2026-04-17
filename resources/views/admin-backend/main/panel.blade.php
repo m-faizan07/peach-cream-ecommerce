@@ -96,6 +96,11 @@
                         <i class="align-middle" data-feather="home"></i> <span class="align-middle">Dashboard</span>
                     </a>
                 </li>
+                <li class="sidebar-item {{ request()->routeIs('admin.products.*') ? 'active' : '' }}">
+                    <a class="sidebar-link" href="{{ route('admin.products.index') }}">
+                        <i class="align-middle" data-feather="package"></i> <span class="align-middle">Products</span>
+                    </a>
+                </li>
                 <li class="sidebar-item {{ request()->routeIs('admin.orders.*') ? 'active' : '' }}">
                     <a class="sidebar-link" href="{{ route('admin.orders.index') }}">
                         <i class="align-middle" data-feather="shopping-cart"></i> <span class="align-middle">Orders</span>

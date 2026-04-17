@@ -4,10 +4,12 @@ use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\NewsletterController as AdminNewsletterController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
 use App\Http\Controllers\Frontend\CartController;
 use App\Http\Controllers\Frontend\CheckoutController;
 use App\Http\Controllers\Frontend\PublicFormController;
+use App\Http\Controllers\Frontend\ShopController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,7 +26,8 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('no_admin_frontend')->group(function () {
     Route::view('/', 'frontend.index')->name('frontend.home');
     Route::view('/about', 'frontend.About')->name('frontend.about');
-    Route::view('/product', 'frontend.Product-page')->name('frontend.product');
+    Route::get('/product', [ShopController::class, 'product'])->name('frontend.product');
+    Route::post('/reviews', [ShopController::class, 'storeReview'])->name('frontend.reviews.store');
     Route::view('/contact', 'frontend.contactus')->name('frontend.contact');
     Route::post('/newsletter', [PublicFormController::class, 'newsletter'])->name('frontend.newsletter.subscribe');
     Route::post('/contact', [PublicFormController::class, 'contact'])->name('frontend.contact.submit');
@@ -54,6 +57,14 @@ Route::middleware('guest')->group(function () {
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
     Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/products', [AdminProductController::class, 'index'])->name('products.index');
+    Route::get('/products/create', [AdminProductController::class, 'create'])->name('products.create');
+    Route::post('/products', [AdminProductController::class, 'store'])->name('products.store');
+    Route::get('/products/{product}/edit', [AdminProductController::class, 'edit'])->name('products.edit');
+    Route::put('/products/{product}', [AdminProductController::class, 'update'])->name('products.update');
+    Route::delete('/products/{product}/main-image', [AdminProductController::class, 'removeMainImage'])->name('products.main-image.delete');
+    Route::delete('/products/{product}/gallery/{image}', [AdminProductController::class, 'deleteGalleryImage'])->name('products.gallery.delete');
+    Route::delete('/products/{product}', [AdminProductController::class, 'destroy'])->name('products.destroy');
     Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders.index');
     Route::get('/reviews', [AdminReviewController::class, 'index'])->name('reviews.index');
     Route::post('/reviews/{review}/approve', [AdminReviewController::class, 'approve'])->name('reviews.approve');

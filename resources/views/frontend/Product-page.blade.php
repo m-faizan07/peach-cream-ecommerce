@@ -8,7 +8,7 @@
     <div class="breadcrumb">
         <a href="{{ route('frontend.home') }}">Home</a>
         <span class="sep"><i class="fa-solid fa-chevron-right"></i></span>
-        <span class="current">Peach Cream</span>
+        <span class="current">{{ $title ?? 'Peach Cream' }}</span>
     </div>
 
     <!-- Product Section -->
@@ -16,30 +16,27 @@
         <!-- Left: Gallery -->
         <div class="product-gallery">
             <div class="product-main-img">
-                <img src="images/what-make-you-happy.png" alt="Peach Cream Bottle" id="mainImg">
+                <img src="{{ $main_image ?? asset('frontend/images/what-make-you-happy.png') }}" alt="{{ $title ?? 'Peach Cream' }}" id="mainImg">
             </div>
             <div class="product-thumbnails">
-                <div class="thumb active" onclick="changeImg(this,'images/what-make-you-happy.png')">
-                    <img src="images/what-make-you-happy.png" alt="view 1">
-                </div>
-                <div class="thumb" onclick="changeImg(this,'images/hero-img.png')">
-                    <img src="images/hero-img.png" alt="view 2">
-                </div>
-                <div class="thumb" onclick="changeImg(this,'images/readytogive.png')">
-                    <img src="images/readytogive.png" alt="view 3">
-                </div>
-                <div class="thumb" onclick="changeImg(this,'images/daily-care.jpg')">
-                    <img src="images/daily-care.jpg" alt="view 4">
-                </div>
+                @foreach (($gallery_images ?? [asset('frontend/images/what-make-you-happy.png')]) as $img)
+                    <div class="thumb {{ $loop->first ? 'active' : '' }}" onclick="changeImg(this,'{{ $img }}')">
+                        <img src="{{ $img }}" alt="view {{ $loop->iteration }}">
+                    </div>
+                @endforeach
             </div>
         </div>
 
         <!-- Right: Product Info -->
         <div class="product-info-wrapper">
             <div class="product-info">
-                <h1>Peach Cream</h1>
-                <p class="product-tagline">A skincare-first approach to comfort, hydration, and barrier support. No
-                    steroids. No numbing. Just happy skin.</p>
+                <h1>{{ $title ?? 'Peach Cream' }}</h1>
+                <div style="margin:8px 0 10px;">
+                    <span style="display:inline-block; padding:4px 10px; border-radius:999px; font-size:12px; font-weight:600; color:#fff; background:{{ ($in_stock ?? true) ? '#198754' : '#dc3545' }};">
+                        {{ ($in_stock ?? true) ? 'In Stock' : 'Out of Stock' }}
+                    </span>
+                </div>
+                <p class="product-tagline">{{ $tagline ?? 'A skincare-first approach to comfort, hydration, and barrier support. No steroids. No numbing. Just happy skin.' }}</p>
 
                 <div class="product-rating">
                     <div class="stars">
@@ -49,20 +46,18 @@
                         <i class="fa-solid fa-star"></i>
                         <i class="fa-solid fa-star"></i>
                     </div>
-                    <span class="review-count">(243 Reviews)</span>
+                    <span class="review-count">({{ $review_count ?? 243 }} Reviews)</span>
                 </div>
 
                 <div class="product-price-row">
-                    <span class="price-current">$50.00</span>
-                    <span class="price-original">$60.00</span>
+                    <span class="price-current">${{ number_format((float) ($price ?? 50), 2) }}</span>
+                    <span class="price-original">${{ number_format((float) ($original_price ?? 60), 2) }}</span>
                 </div>
 
                 <div class="product-badges">
-                    <div class="badge-item"><i class="fa-solid fa-circle-check"></i> pH-balanced & Fragrance free</div>
-                    <div class="badge-item"><i class="fa-solid fa-circle-check"></i> No steroids / no numbing agents
-                    </div>
-                    <div class="badge-item"><i class="fa-solid fa-circle-check"></i> Dermatologist reviewed</div>
-                    <div class="badge-item"><i class="fa-solid fa-circle-check"></i> Ships worldwide</div>
+                    @foreach (($badges ?? []) as $badge)
+                        <div class="badge-item"><i class="fa-solid fa-circle-check"></i> {{ $badge }}</div>
+                    @endforeach
                 </div>
 
                 <div class="quantity-row">
@@ -102,67 +97,18 @@
 
                 <!-- Accordion Tabs Inside Product Info -->
                 <div class="product-tabs-inline">
-                    <div class="tab-item open" id="tab-description">
-                        <div class="tab-header" onclick="toggleTab('tab-description')">
-                            <h3>Description</h3>
-                            <i class="fa-solid fa-chevron-down"></i>
+                    @foreach (($tabs ?? []) as $tab)
+                        @php $tabId = 'tab-' . $loop->index; @endphp
+                        <div class="tab-item {{ $loop->first ? 'open' : '' }}" id="{{ $tabId }}">
+                            <div class="tab-header" onclick="toggleTab('{{ $tabId }}')">
+                                <h3>{{ $tab['title'] ?? 'Info' }}</h3>
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </div>
+                            <div class="tab-body">
+                                <p>{{ $tab['content'] ?? '' }}</p>
+                            </div>
                         </div>
-                        <div class="tab-body">
-                            <p>Peach Cream is a daily perianal skincare cream — not a drug, just clean, clinical-grade
-                                care.
-                                Formulated with ceramides, panthenol, bisabolol, and allantoin to soothe minor
-                                irritation, support
-                                your skin barrier, and help delicate skin feel comfortable.</p>
-                        </div>
-                    </div>
-                    <div class="tab-item" id="tab-howtouse">
-                        <div class="tab-header" onclick="toggleTab('tab-howtouse')">
-                            <h3>How To Use</h3>
-                            <i class="fa-solid fa-chevron-down"></i>
-                        </div>
-                        <div class="tab-body">
-                            <ul>
-                                <li>Cleanse the area gently with warm water and pat dry.</li>
-                                <li>Apply a small, pea-sized amount of Peach Cream.</li>
-                                <li>Gently massage until absorbed.</li>
-                                <li>Use once or twice daily.</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="tab-item" id="tab-price">
-                        <div class="tab-header" onclick="toggleTab('tab-price')">
-                            <h3>Price Breakdown</h3>
-                            <i class="fa-solid fa-chevron-down"></i>
-                        </div>
-                        <div class="tab-body">
-                            <ul>
-                                <li><strong>Regular Price:</strong> $60.00</li>
-                                <li><strong>Sale Price:</strong> $50.00</li>
-                                <li><strong>You Save:</strong> $10.00 (17% off)</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="tab-item" id="tab-ingredients">
-                        <div class="tab-header" onclick="toggleTab('tab-ingredients')">
-                            <h3>Ingredients</h3>
-                            <i class="fa-solid fa-chevron-down"></i>
-                        </div>
-                        <div class="tab-body">
-                            <p>Water, Glycerin, Ceramide NP, Panthenol, Allantoin, Bisabolol, Betaine.</p>
-                        </div>
-                    </div>
-                    <div class="tab-item" id="tab-shipping">
-                        <div class="tab-header" onclick="toggleTab('tab-shipping')">
-                            <h3>Shipping & Delivery</h3>
-                            <i class="fa-solid fa-chevron-down"></i>
-                        </div>
-                        <div class="tab-body">
-                            <ul>
-                                <li><strong>Standard Shipping:</strong> 5-7 business days</li>
-                                <li><strong>Express Shipping:</strong> 2-3 business days</li>
-                            </ul>
-                        </div>
-                    </div>
+                    @endforeach
                 </div>
             </div>
         </div>

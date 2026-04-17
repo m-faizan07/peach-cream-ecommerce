@@ -11,11 +11,26 @@ class Product extends Model
 
     protected $fillable = [
         'title',
+        'tagline',
         'description',
         'quantity',
         'price',
+        'original_price',
         'discount',
+        'review_count',
         'main_image',
+        'badges_json',
+        'gallery_images_json',
+        'tabs_json',
+    ];
+
+    protected $casts = [
+        'price' => 'decimal:2',
+        'original_price' => 'decimal:2',
+        'discount' => 'decimal:2',
+        'badges_json' => 'array',
+        'gallery_images_json' => 'array',
+        'tabs_json' => 'array',
     ];
 
     public function images()

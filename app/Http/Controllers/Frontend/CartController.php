@@ -15,7 +15,7 @@ class CartController extends Controller
         if ($product) {
             return [
                 'id' => $product->id,
-                'quantity' => max((int) $product->quantity, 1),
+                'quantity' => max((int) $product->quantity, 0),
                 'price' => (float) $product->price,
                 'discount' => (float) $product->discount,
             ];
@@ -30,14 +30,6 @@ class CartController extends Controller
         $product = $this->resolveProduct();
         $cart = session('cart', []);
 
-        // Preserve existing frontend design behavior: clicking "Add To Cart" links to /cart.
-        // If user arrives from the product page and cart is empty, treat it as add-to-cart.
-        $cameFromProduct = str_contains(url()->previous(), '/product');
-        if ($cameFromProduct && ! isset($cart[$product['id']])) {
-            $cart[$product['id']] = ['quantity' => 1];
-            session(['cart' => $cart]);
-        }
-
         $qty = $cart[$product['id']]['quantity'] ?? 0;
         if ($qty < 1) {
             return view('frontend.empty-cart');
@@ -50,10 +42,18 @@ class CartController extends Controller
     public function add(Request $request)
     {
         $product = $this->resolveProduct();
+        if ($product['quantity'] < 1) {
+            return back()->withErrors(['stock' => 'Cannot add to cart because product is out of stock.']);
+        }
+
         $qty = max((int) $request->input('quantity', 1), 1);
         $cart = session('cart', []);
         $current = $cart[$product['id']]['quantity'] ?? 0;
-        $cart[$product['id']] = ['quantity' => min($current + $qty, $product['quantity'])];
+        $newQty = min($current + $qty, $product['quantity']);
+        if ($newQty < 1) {
+            return back()->withErrors(['stock' => 'Cannot add to cart because product is out of stock.']);
+        }
+        $cart[$product['id']] = ['quantity' => $newQty];
         session(['cart' => $cart]);
         return redirect()->route('frontend.cart');
     }
