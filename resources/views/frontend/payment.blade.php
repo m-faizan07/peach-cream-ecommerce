@@ -23,6 +23,12 @@
                     </nav>
                 </header>
 
+                @if ($errors->any())
+                    <div class="alert alert-danger" style="margin-bottom: 16px;">
+                        {{ $errors->first() }}
+                    </div>
+                @endif
+
                 <div class="checkout-review-box">
                     <div class="review-row">
                         <span class="review-label">Contact</span>
@@ -49,11 +55,11 @@
 
                     <div class="payment-options-box">
                         <!-- Credit Card Option -->
-                        <div class="payment-method-option selected">
+                        <div class="payment-method-option {{ ($checkout['payment_method'] ?? 'credit_card') === 'credit_card' ? 'selected' : '' }}">
                             <label class="method-header">
                                 <div class="header-left">
                                     <input type="radio" name="payment_method" value="credit_card" id="method-cc"
-                                        checked>
+                                        {{ ($checkout['payment_method'] ?? 'credit_card') === 'credit_card' ? 'checked' : '' }}>
                                     <span class="radio-custom"></span>
                                     <span class="method-name">Credit card</span>
                                 </div>
@@ -68,25 +74,26 @@
 
                             <div class="payment-fields">
                                 <div class="field-container">
-                                    <input type="text" placeholder="Card number" class="form-input">
+                                    <div class="form-input" id="stripe-card-number"></div>
                                     <i class="fa-solid fa-lock field-icon"></i>
                                 </div>
                                 <div class="form-row">
-                                    <input type="text" placeholder="Expiration date (MM/YY)" class="form-input">
+                                    <div class="form-input" id="stripe-card-expiry"></div>
                                     <div class="field-container">
-                                        <input type="text" placeholder="Security Code" class="form-input">
+                                        <div class="form-input" id="stripe-card-cvc"></div>
                                         <i class="fa-solid fa-circle-question field-icon"></i>
                                     </div>
                                 </div>
-                                <input type="text" placeholder="Name on card" class="form-input">
+                                <input type="text" placeholder="Name on card" class="form-input" id="stripe-cardholder-name">
+                                <p id="stripe-card-error" style="color:#d32f2f; margin-top:8px; display:none;"></p>
                             </div>
                         </div>
 
                         <!-- PayPal Option -->
-                        <div class="payment-method-option">
+                        <div class="payment-method-option {{ ($checkout['payment_method'] ?? 'credit_card') === 'paypal' ? 'selected' : '' }}">
                             <label class="method-header">
                                 <div class="header-left">
-                                    <input type="radio" name="payment_method" value="paypal" id="method-paypal">
+                                    <input type="radio" name="payment_method" value="paypal" id="method-paypal" {{ ($checkout['payment_method'] ?? 'credit_card') === 'paypal' ? 'checked' : '' }}>
                                     <span class="radio-custom"></span>
                                     <span class="method-name">PayPal</span>
                                 </div>
@@ -221,3 +228,10 @@
     </div>
 
 @endsection
+
+@push('scripts')
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        window.checkoutStripePublicKey = @json($stripePublicKey ?? '');
+    </script>
+@endpush

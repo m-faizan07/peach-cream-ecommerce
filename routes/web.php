@@ -34,6 +34,11 @@ Route::middleware('no_admin_frontend')->group(function () {
     Route::match(['get', 'post'], '/checkout-shipping', [CheckoutController::class, 'shippingMethod'])->name('frontend.checkout-shipping');
     Route::match(['get', 'post'], '/payment', [CheckoutController::class, 'payment'])->name('frontend.payment');
     Route::match(['get', 'post'], '/checkout-place-order', [CheckoutController::class, 'place'])->name('frontend.checkout.place');
+    Route::post('/payment/stripe/intent', [CheckoutController::class, 'createStripeIntent'])->name('frontend.payment.stripe.intent');
+    Route::get('/payment/stripe/success', [CheckoutController::class, 'stripeSuccess'])->name('frontend.payment.stripe.success');
+    Route::get('/payment/stripe/cancel', [CheckoutController::class, 'stripeCancel'])->name('frontend.payment.stripe.cancel');
+    Route::get('/payment/paypal/success', [CheckoutController::class, 'paypalSuccess'])->name('frontend.payment.paypal.success');
+    Route::get('/payment/paypal/cancel', [CheckoutController::class, 'paypalCancel'])->name('frontend.payment.paypal.cancel');
 });
 
 Route::get('/dashboard', fn () => redirect('/admin'))->name('admin.dashboard.legacy');

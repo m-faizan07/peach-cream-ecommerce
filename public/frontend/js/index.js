@@ -236,6 +236,42 @@ document.addEventListener('DOMContentLoaded', function() {
     // Payment Method Selection
     const paymentOptions = document.querySelectorAll('input[name="payment_method"]');
     const payBtn = document.getElementById('pay-now-btn');
+    const isPaymentPage = window.location.pathname === '/payment';
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+
+    let stripe = null;
+    let cardNumber = null;
+    let cardExpiry = null;
+    let cardCvc = null;
+
+    if (isPaymentPage && window.Stripe && window.checkoutStripePublicKey) {
+        stripe = window.Stripe(window.checkoutStripePublicKey);
+        const elements = stripe.elements();
+        const elementStyle = {
+            base: {
+                color: '#1f2937',
+                fontSize: '18px',
+                fontFamily: 'inherit'
+            },
+            invalid: {
+                color: '#d32f2f'
+            }
+        };
+
+        cardNumber = elements.create('cardNumber', { style: elementStyle });
+        cardExpiry = elements.create('cardExpiry', { style: elementStyle });
+        cardCvc = elements.create('cardCvc', { style: elementStyle });
+
+        if (document.getElementById('stripe-card-number')) {
+            cardNumber.mount('#stripe-card-number');
+        }
+        if (document.getElementById('stripe-card-expiry')) {
+            cardExpiry.mount('#stripe-card-expiry');
+        }
+        if (document.getElementById('stripe-card-cvc')) {
+            cardCvc.mount('#stripe-card-cvc');
+        }
+    }
 
     paymentOptions.forEach(option => {
         option.addEventListener('change', function() {
@@ -326,8 +362,6 @@ document.addEventListener('DOMContentLoaded', function() {
             form.submit();
         });
     });
-
-    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
 
     // Clear cart button in current static design.
     const clearCartLink = document.getElementById('clear-cart-link');
@@ -449,24 +483,116 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Payment step: submit selected method via POST.
     if (window.location.pathname === '/payment' && payBtn) {
-        payBtn.addEventListener('click', function(e) {
+        payBtn.addEventListener('click', async function(e) {
             e.preventDefault();
             const paymentMethod = document.querySelector('input[name="payment_method"]:checked')?.value || 'credit_card';
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = '/checkout-place-order';
-            const token = document.createElement('input');
-            token.type = 'hidden';
-            token.name = '_token';
-            token.value = csrfToken;
-            const method = document.createElement('input');
-            method.type = 'hidden';
-            method.name = 'payment_method';
-            method.value = paymentMethod;
-            form.appendChild(token);
-            form.appendChild(method);
-            document.body.appendChild(form);
-            form.submit();
+            const stripeError = document.getElementById('stripe-card-error');
+            if (stripeError) {
+                stripeError.style.display = 'none';
+                stripeError.textContent = '';
+            }
+
+            if (paymentMethod === 'paypal') {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/checkout-place-order';
+                const token = document.createElement('input');
+                token.type = 'hidden';
+                token.name = '_token';
+                token.value = csrfToken;
+                const method = document.createElement('input');
+                method.type = 'hidden';
+                method.name = 'payment_method';
+                method.value = paymentMethod;
+                form.appendChild(token);
+                form.appendChild(method);
+                document.body.appendChild(form);
+                form.submit();
+                return;
+            }
+
+            if (!stripe || !cardNumber) {
+                if (stripeError) {
+                    stripeError.textContent = 'Stripe is not configured. Please add STRIPE_PUBLIC key.';
+                    stripeError.style.display = 'block';
+                }
+                return;
+            }
+
+            payBtn.disabled = true;
+            const originalText = payBtn.textContent;
+            payBtn.textContent = 'Processing...';
+
+            try {
+                const intentResponse = await fetch('/payment/stripe/intent', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({})
+                });
+
+                const intentPayload = await intentResponse.json();
+                if (!intentResponse.ok || !intentPayload.client_secret) {
+                    throw new Error(intentPayload.message || 'Unable to initialize card payment.');
+                }
+
+                const cardholderName = document.getElementById('stripe-cardholder-name')?.value || '';
+                const billingEmail = document.querySelector('.review-row .review-value')?.textContent?.trim() || '';
+                const result = await stripe.confirmCardPayment(intentPayload.client_secret, {
+                    payment_method: {
+                        card: cardNumber,
+                        billing_details: {
+                            name: cardholderName || undefined,
+                            email: billingEmail || undefined
+                        }
+                    }
+                });
+
+                if (result.error) {
+                    throw new Error(result.error.message || 'Card payment failed.');
+                }
+
+                if (!result.paymentIntent || result.paymentIntent.status !== 'succeeded') {
+                    throw new Error('Card payment not completed.');
+                }
+
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/checkout-place-order';
+
+                const token = document.createElement('input');
+                token.type = 'hidden';
+                token.name = '_token';
+                token.value = csrfToken;
+
+                const method = document.createElement('input');
+                method.type = 'hidden';
+                method.name = 'payment_method';
+                method.value = 'credit_card';
+
+                const intentId = document.createElement('input');
+                intentId.type = 'hidden';
+                intentId.name = 'stripe_payment_intent_id';
+                intentId.value = result.paymentIntent.id;
+
+                form.appendChild(token);
+                form.appendChild(method);
+                form.appendChild(intentId);
+                document.body.appendChild(form);
+                form.submit();
+            } catch (err) {
+                if (stripeError) {
+                    stripeError.textContent = err.message || 'Payment failed.';
+                    stripeError.style.display = 'block';
+                } else {
+                    alert(err.message || 'Payment failed.');
+                }
+                payBtn.disabled = false;
+                payBtn.textContent = originalText;
+            }
         });
     }
 });

@@ -17,6 +17,8 @@ class Order extends Model
         'shipping_method',
         'shipping_cost',
         'payment_method',
+        'payment_provider',
+        'payment_reference',
         'subtotal',
         'total',
         'status',
