@@ -23,12 +23,17 @@ Route::view('/shipping', 'frontend.shipping')->name('frontend.shipping');
 Route::view('/checkout-shipping', 'frontend.checkout-shipping')->name('frontend.checkout-shipping');
 Route::view('/payment', 'frontend.payment')->name('frontend.payment');
 
-// Route::redirect('/frontend/index.html', '/');
-// Route::redirect('/frontend/About.html', '/about');
-// Route::redirect('/frontend/Product-page.html', '/product');
-// Route::redirect('/frontend/contactus.html', '/contact');
-// Route::redirect('/frontend/cart.html', '/cart');
-// Route::redirect('/frontend/empty-cart.html', '/empty-cart');
-// Route::redirect('/frontend/shipping.html', '/shipping');
-// Route::redirect('/frontend/checkout-shipping.html', '/checkout-shipping');
-// Route::redirect('/frontend/payment.html', '/payment');
+Route::view('/dashboard', 'admin-backend.index')->name('admin.dashboard');
+Route::view('/dashboard/pages-profile', 'admin-backend.pages-profile')->name('admin.profile');
+Route::view('/dashboard/pages-sign-in', 'admin-backend.pages-sign-in')->name('admin.sign-in');
+Route::view('/dashboard/pages-sign-up', 'admin-backend.pages-sign-up')->name('admin.sign-up');
+Route::view('/dashboard/pages-blank', 'admin-backend.pages-blank')->name('admin.blank');
+Route::view('/dashboard/ui-buttons', 'admin-backend.ui-buttons')->name('admin.ui.buttons');
+Route::view('/dashboard/ui-forms', 'admin-backend.ui-forms')->name('admin.ui.forms');
+Route::view('/dashboard/ui-cards', 'admin-backend.ui-cards')->name('admin.ui.cards');
+Route::view('/dashboard/ui-typography', 'admin-backend.ui-typography')->name('admin.ui.typography');
+Route::view('/dashboard/icons-feather', 'admin-backend.icons-feather')->name('admin.icons.feather');
+Route::view('/dashboard/charts-chartjs', 'admin-backend.charts-chartjs')->name('admin.charts.chartjs');
+Route::view('/dashboard/maps-google', 'admin-backend.maps-google')->name('admin.maps.google');
+Route::view('/dashboard/upgrade-to-pro', 'admin-backend.upgrade-to-pro')->name('admin.upgrade');
+
