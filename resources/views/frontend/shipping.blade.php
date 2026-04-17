@@ -47,7 +47,7 @@
                     <div class="form-section">
                         <div class="section-header">
                             <h2>Contact</h2>
-                            <a href="#" class="login-link">Sign in</a>
+                            <!-- <a href="#" class="login-link">Sign in</a> -->
                         </div>
                         <input type="email" placeholder="Email" class="form-input" required value="{{ old('email', $checkout['email'] ?? '') }}">
                         <div class="checkbox-group">

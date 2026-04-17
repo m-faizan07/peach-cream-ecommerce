@@ -27,6 +27,7 @@ class ProductController extends Controller
             'original_price' => 60,
             'discount' => 10,
             'review_count' => 243,
+            'rating_value' => 5.0,
             'badges_json' => [],
             'gallery_images_json' => [],
             'tabs_json' => [],
@@ -139,6 +140,7 @@ class ProductController extends Controller
             'price' => ['required', 'numeric', 'min:0'],
             'discount' => ['nullable', 'numeric', 'min:0'],
             'review_count' => ['nullable', 'integer', 'min:0'],
+            'rating_value' => ['nullable', 'numeric', 'min:0', 'max:5'],
             'main_image' => ['nullable', 'image', 'max:2048'],
             'gallery_images' => ['nullable', 'array'],
             'gallery_images.*' => ['nullable', 'image', 'max:4096'],
@@ -175,6 +177,7 @@ class ProductController extends Controller
         $data['gallery_images_json'] = $existingGallery;
         $data['tabs_json'] = $faqs;
         $data['review_count'] = $data['review_count'] ?? 0;
+        $data['rating_value'] = isset($data['rating_value']) ? round((float) $data['rating_value'], 1) : 5.0;
         $data['original_price'] = $data['original_price'] ?? null;
 
         return $data;

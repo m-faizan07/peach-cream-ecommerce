@@ -10,7 +10,7 @@ class CartController extends Controller
 {
     private function resolveProduct(): array
     {
-        $product = Product::first();
+        $product = Product::latest()->first();
 
         if ($product) {
             return [
@@ -22,7 +22,7 @@ class CartController extends Controller
         }
 
         // Static fallback values matching current frontend presentation.
-        return ['id' => 1, 'quantity' => 99, 'price' => 60.0, 'discount' => 10.0];
+        return ['id' => 1, 'quantity' => 99, 'price' => 50.0, 'discount' => 10.0];
     }
 
     public function index()
@@ -34,7 +34,7 @@ class CartController extends Controller
         if ($qty < 1) {
             return view('frontend.empty-cart');
         }
-        $unit = max($product['price'] - $product['discount'], 0);
+        $unit = max($product['price'], 0);
         $subtotal = $qty * $unit;
         return view('frontend.cart', compact('product', 'qty', 'subtotal', 'unit'));
     }

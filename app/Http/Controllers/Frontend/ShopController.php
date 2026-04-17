@@ -21,6 +21,7 @@ class ShopController extends Controller
             'price' => 50.00,
             'original_price' => 60.00,
             'review_count' => 243,
+            'rating_value' => 5.0,
             'main_image' => 'images/what-make-you-happy.png',
             'gallery_images' => [
                 'images/what-make-you-happy.png',
@@ -50,6 +51,7 @@ class ShopController extends Controller
             'price' => $product->price ?? $defaults['price'],
             'original_price' => $product->original_price ?? $defaults['original_price'],
             'review_count' => $product->review_count ?? $defaults['review_count'],
+            'rating_value' => $product->rating_value ?? $defaults['rating_value'],
             'main_image' => ($product && $product->main_image)
                 ? $this->resolveImageUrl($product->main_image, $defaults['main_image'])
                 : asset('frontend/' . $defaults['main_image']),

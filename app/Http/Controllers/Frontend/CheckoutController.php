@@ -16,7 +16,7 @@ class CheckoutController extends Controller
 {
     private function resolveProduct(): array
     {
-        $product = Product::first();
+        $product = Product::latest()->first();
 
         if ($product) {
             return [
@@ -30,7 +30,7 @@ class CheckoutController extends Controller
         return [
             'model' => null,
             'id' => 1,
-            'price' => 60.0,
+            'price' => 50.0,
             'discount' => 10.0,
         ];
     }
@@ -72,7 +72,7 @@ class CheckoutController extends Controller
 
         $product = $this->resolveProduct();
         $qty = session('cart.' . $product['id'] . '.quantity', 0);
-        $unit = max($product['price'] - $product['discount'], 0);
+        $unit = max($product['price'], 0);
         $subtotal = $unit * $qty;
         $checkout = session('checkout', []);
         return view('frontend.shipping', compact('product', 'qty', 'unit', 'subtotal', 'checkout'));
@@ -119,7 +119,7 @@ class CheckoutController extends Controller
 
         $product = $this->resolveProduct();
         $qty = session('cart.' . $product['id'] . '.quantity', 0);
-        $unit = max($product['price'] - $product['discount'], 0);
+        $unit = max($product['price'], 0);
         $subtotal = $unit * $qty;
         $checkout = session('checkout', []);
         $shippingMethod = $checkout['shipping_method'] ?? 'free';
@@ -148,7 +148,7 @@ class CheckoutController extends Controller
 
         $product = $this->resolveProduct();
         $qty = session('cart.' . $product['id'] . '.quantity', 0);
-        $unit = max($product['price'] - $product['discount'], 0);
+        $unit = max($product['price'], 0);
         $subtotal = $unit * $qty;
         $checkout = session('checkout', []);
         $shippingMethod = $checkout['shipping_method'] ?? 'free';
@@ -298,7 +298,7 @@ class CheckoutController extends Controller
             abort_unless(isset($checkout[$field]) && $checkout[$field] !== '', 422, 'Checkout information incomplete.');
         }
 
-        $unit = max($product['price'] - $product['discount'], 0);
+        $unit = max($product['price'], 0);
         $subtotal = $unit * $qty;
         $shippingCost = ($checkout['shipping_method'] ?? 'free') === 'paid' ? 10 : 0;
 

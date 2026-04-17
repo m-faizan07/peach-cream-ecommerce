@@ -18,6 +18,7 @@
                         <th>Sale Price</th>
                         <th>Qty</th>
                         <th>Reviews</th>
+                        <th>Rating</th>
                         <th>Updated</th>
                         <th>Actions</th>
                     </tr>
@@ -31,6 +32,7 @@
                             <td>${{ number_format((float) $product->price, 2) }}</td>
                             <td>{{ $product->quantity }}</td>
                             <td>{{ $product->review_count ?? 0 }}</td>
+                            <td>{{ number_format((float) ($product->rating_value ?? 5), 1) }}</td>
                             <td>{{ $product->updated_at }}</td>
                             <td>
                                 <a href="{{ route('admin.products.edit', $product) }}" class="btn btn-sm btn-outline-primary">Edit</a>

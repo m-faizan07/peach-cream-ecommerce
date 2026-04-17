@@ -72,7 +72,11 @@
                     </div>
                 @endif
             </div>
-            <div class="col-md-6">
+            <div class="col-md-3">
+                <label class="form-label">Rating Value (0-5)</label>
+                <input class="form-control" type="number" step="0.1" min="0" max="5" name="rating_value" value="{{ old('rating_value', $product->rating_value ?? 5) }}">
+            </div>
+            <div class="col-md-3">
                 <label class="form-label">Discount</label>
                 <input class="form-control" type="number" step="0.01" min="0" name="discount" value="{{ old('discount', $product->discount) }}" readonly>
             </div>

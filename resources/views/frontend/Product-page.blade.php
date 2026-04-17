@@ -40,11 +40,16 @@
 
                 <div class="product-rating">
                     <div class="stars">
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
-                        <i class="fa-solid fa-star"></i>
+                        @php $ratingValue = (float) ($rating_value ?? 5); @endphp
+                        @for ($i = 1; $i <= 5; $i++)
+                            @if ($ratingValue >= $i)
+                                <i class="fa-solid fa-star"></i>
+                            @elseif ($ratingValue >= ($i - 0.5))
+                                <i class="fa-solid fa-star-half-stroke"></i>
+                            @else
+                                <i class="fa-regular fa-star"></i>
+                            @endif
+                        @endfor
                     </div>
                     <span class="review-count">({{ $review_count ?? 243 }} Reviews)</span>
                 </div>
