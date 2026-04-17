@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use App\Events\NewOrderPlaced;
 use App\Http\Controllers\Controller;
+use App\Models\AdminNotification;
 use App\Models\NewsletterSubscription;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -482,6 +484,20 @@ class CheckoutController extends Controller
 
             return $order;
         });
+
+        $notification = AdminNotification::create([
+            'type' => 'new_order',
+            'payload' => [
+                'order_id' => (int) $order->id,
+                'email' => (string) $order->email,
+                'total' => (float) $order->total,
+                'status' => (string) $order->status,
+            ],
+            'is_read' => false,
+        ]);
+
+        $unreadCount = AdminNotification::query()->where('is_read', false)->count();
+        event(new NewOrderPlaced($order, (int) $notification->id, (int) $unreadCount));
 
         session()->forget(['cart', 'checkout']);
         return $order;

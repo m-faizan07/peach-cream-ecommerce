@@ -87,6 +87,16 @@
     $profileImageUrl = !empty($authUser->profile_image)
         ? asset('storage/' . $authUser->profile_image)
         : asset('frontend/images/doc.jpg');
+    $pusherKey = (string) config('broadcasting.connections.pusher.key');
+    $pusherCluster = (string) config('broadcasting.connections.pusher.options.cluster');
+    $recentOrderNotifications = \App\Models\AdminNotification::query()
+        ->where('type', 'new_order')
+        ->latest()
+        ->limit(5)
+        ->get();
+    $unreadNotificationCount = \App\Models\AdminNotification::query()
+        ->where('is_read', false)
+        ->count();
 @endphp
 <div class="wrapper">
     <nav id="sidebar" class="sidebar js-sidebar">
@@ -246,11 +256,28 @@
                         <a class="nav-icon dropdown-toggle" href="#" id="alertsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                             <div class="position-relative">
                                 <i class="align-middle" data-feather="bell"></i>
-                                <span class="indicator">4</span>
+                                <span class="indicator {{ $unreadNotificationCount > 0 ? '' : 'd-none' }}" id="admin-order-notification-count">{{ $unreadNotificationCount }}</span>
                             </div>
                         </a>
-                        <div class="dropdown-menu dropdown-menu-end py-2" aria-labelledby="alertsDropdown">
-                            <span class="dropdown-item-text text-muted small">4 new notifications</span>
+                        <div class="dropdown-menu dropdown-menu-end py-2" aria-labelledby="alertsDropdown" style="min-width: 300px;">
+                            <span class="dropdown-item-text text-muted small {{ $recentOrderNotifications->count() > 0 ? 'd-none' : '' }}" id="admin-order-notification-empty">No new order notifications</span>
+                            <div id="admin-order-notification-list">
+                                @foreach ($recentOrderNotifications as $noticeOrder)
+                                    @php $payload = (array) ($noticeOrder->payload ?? []); @endphp
+                                    <a
+                                        href="{{ route('admin.orders.index') }}"
+                                        class="dropdown-item admin-order-notice-item {{ $noticeOrder->is_read ? '' : 'bg-light' }}"
+                                        data-notification-id="{{ $noticeOrder->id }}"
+                                    >
+                                        <div class="fw-semibold">Order #{{ $payload['order_id'] ?? 'N/A' }}</div>
+                                        <div class="small text-muted">{{ $payload['email'] ?? 'N/A' }}</div>
+                                        <div class="small text-muted">Total: ${{ number_format((float) ($payload['total'] ?? 0), 2) }}</div>
+                                    </a>
+                                @endforeach
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <button type="button" class="dropdown-item text-center" id="admin-mark-all-notifications-read">Mark all as read</button>
+                            <a href="{{ route('admin.notifications.index') }}" class="dropdown-item text-center fw-semibold">Show all notifications</a>
                         </div>
                     </li>
                     <li class="nav-item dropdown">
@@ -301,5 +328,130 @@
 <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.colVis.min.js"></script>
+<script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+<script>
+    (function () {
+        const pusherKey = @json($pusherKey);
+        const pusherCluster = @json($pusherCluster ?: 'mt1');
+
+        if (!pusherKey || !window.Pusher) {
+            return;
+        }
+
+        const countNode = document.getElementById('admin-order-notification-count');
+        const emptyNode = document.getElementById('admin-order-notification-empty');
+        const listNode = document.getElementById('admin-order-notification-list');
+        let unreadCount = Number(countNode?.textContent || '0');
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+
+        function updateCount() {
+            if (!countNode) return;
+            if (unreadCount > 0) {
+                countNode.textContent = String(unreadCount);
+                countNode.classList.remove('d-none');
+            } else {
+                countNode.textContent = '0';
+                countNode.classList.add('d-none');
+            }
+        }
+
+        function appendNotification(order) {
+            if (!listNode) return;
+            if (emptyNode) {
+                emptyNode.classList.add('d-none');
+            }
+
+            const wrapper = document.createElement('a');
+            wrapper.href = @json(route('admin.orders.index'));
+            wrapper.className = 'dropdown-item bg-light admin-order-notice-item';
+            wrapper.dataset.notificationId = String(order.notification_id || '');
+            wrapper.innerHTML =
+                '<div class="fw-semibold">New order #' + order.id + '</div>' +
+                '<div class="small text-muted">' + order.email + '</div>' +
+                '<div class="small text-muted">Total: $' + Number(order.total || 0).toFixed(2) + '</div>';
+            listNode.prepend(wrapper);
+
+            unreadCount = Number(order.unread_count || (unreadCount + 1));
+            updateCount();
+
+            if (window.Swal) {
+                window.Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'New order #' + order.id + ' received',
+                    showConfirmButton: false,
+                    timer: 3500,
+                    timerProgressBar: true
+                });
+            }
+        }
+
+        const pusher = new window.Pusher(pusherKey, {
+            cluster: pusherCluster,
+            forceTLS: true
+        });
+
+        const channel = pusher.subscribe('admin-orders');
+        channel.bind('new-order', function (payload) {
+            if (!payload || !payload.order) return;
+            appendNotification(payload.order);
+        });
+
+        function markNotificationRead(notificationId, onDone) {
+            if (!notificationId || !csrfToken) {
+                if (typeof onDone === 'function') onDone();
+                return;
+            }
+            fetch('/admin/notifications/' + notificationId + '/read', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json'
+                }
+            }).then((res) => res.json())
+            .then((payload) => {
+                unreadCount = Number(payload.unread || 0);
+                updateCount();
+                if (typeof onDone === 'function') onDone();
+            })
+            .catch(() => {
+                if (typeof onDone === 'function') onDone();
+            });
+        }
+
+        document.querySelectorAll('.admin-order-notice-item').forEach((item) => {
+            item.addEventListener('click', function (e) {
+                const notificationId = this.dataset.notificationId || '';
+                const href = this.getAttribute('href') || '#';
+                e.preventDefault();
+
+                markNotificationRead(notificationId, () => {
+                    this.classList.remove('bg-light');
+                    window.location.href = href;
+                });
+            });
+        });
+
+        const markAllBtn = document.getElementById('admin-mark-all-notifications-read');
+        if (markAllBtn) {
+            markAllBtn.addEventListener('click', function () {
+                if (!csrfToken) return;
+                fetch('/admin/notifications/read-all', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Accept': 'application/json'
+                    }
+                }).then((res) => res.json())
+                .then((payload) => {
+                    unreadCount = Number(payload.unread || 0);
+                    updateCount();
+                    document.querySelectorAll('.admin-order-notice-item').forEach((n) => n.classList.remove('bg-light'));
+                }).catch(() => {});
+            });
+        }
+    })();
+</script>
 @stack('panel-scripts')
 @endsection
