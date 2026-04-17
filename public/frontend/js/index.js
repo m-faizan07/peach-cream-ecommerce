@@ -250,16 +250,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (this.value === 'paypal' && payBtn) {
                     payBtn.textContent = 'Pay with PayPal';
                     payBtn.classList.add('paypal-btn');
-                    
-                    // Show billing form when PayPal is selected as requested
-                    const billingDifferent = document.getElementById('billing-different');
-                    const billingForm = document.getElementById('billing-address-form');
-                    if (billingDifferent && billingForm) {
-                        billingDifferent.checked = true;
-                        billingForm.classList.remove('hidden');
-                        document.querySelectorAll('.billing-option').forEach(opt => opt.classList.remove('selected'));
-                        billingDifferent.closest('.billing-option').classList.add('selected');
-                    }
                 } else if (payBtn) {
                     payBtn.textContent = 'Pay Now';
                     payBtn.classList.remove('paypal-btn');
