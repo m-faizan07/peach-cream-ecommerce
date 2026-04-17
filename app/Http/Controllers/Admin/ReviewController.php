@@ -9,8 +9,7 @@ class ReviewController extends Controller
 {
     public function index()
     {
-        $reviews = Review::latest()->get();
-        return view('admin-backend.reviews-index', compact('reviews'));
+        return view('admin-backend.reviews-index');
     }
 
     public function approve(Review $review)

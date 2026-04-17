@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Models\NewsletterSubscription;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
@@ -40,6 +41,7 @@ class CheckoutController extends Controller
         if ($request->isMethod('post')) {
             $data = $request->validate([
                 'email' => ['required', 'email'],
+                'newsletter_opt_in' => ['nullable', 'boolean'],
                 'first_name' => ['required', 'string', 'max:100'],
                 'last_name' => ['required', 'string', 'max:100'],
                 'address' => ['required', 'string', 'max:255'],
@@ -65,6 +67,14 @@ class CheckoutController extends Controller
             $checkout['billing_state'] = $checkout['shipping_state'];
             $checkout['billing_zipcode'] = $checkout['shipping_zipcode'];
             $checkout['billing_country'] = $checkout['shipping_country'];
+            $checkout['newsletter_opt_in'] = (bool) ($data['newsletter_opt_in'] ?? false);
+
+            if ($checkout['newsletter_opt_in']) {
+                NewsletterSubscription::firstOrCreate([
+                    'email' => (string) $data['email'],
+                ]);
+            }
+
             session(['checkout' => $checkout]);
 
             return redirect()->route('frontend.checkout-shipping');

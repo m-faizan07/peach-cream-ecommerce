@@ -69,28 +69,29 @@
     <section class="contact-form-section">
         <div class="contact-form-container">
             <div class="contact-form-box">
-                <form>
+                <form method="POST" action="{{ route('frontend.contact.submit') }}">
+                    @csrf
                     <div class="contact-form-row">
                         <div class="contact-form-group">
                             <label class="contact-form-label">First Name</label>
-                            <input type="text" class="contact-form-input">
+                            <input type="text" class="contact-form-input" name="first_name" value="{{ old('first_name') }}">
                         </div>
                         <div class="contact-form-group">
                             <label class="contact-form-label">Last Name</label>
-                            <input type="text" class="contact-form-input">
+                            <input type="text" class="contact-form-input" name="last_name" value="{{ old('last_name') }}">
                         </div>
                     </div>
                     <div class="contact-form-group" style="margin-bottom: 24px;">
                         <label class="contact-form-label">Email</label>
-                        <input type="email" class="contact-form-input">
+                        <input type="email" class="contact-form-input" name="email" value="{{ old('email') }}">
                     </div>
                     <div class="contact-form-group" style="margin-bottom: 24px;">
                         <label class="contact-form-label">Phone</label>
-                        <input type="tel" class="contact-form-input">
+                        <input type="tel" class="contact-form-input" name="phone" value="{{ old('phone') }}">
                     </div>
                     <div class="contact-form-group" style="margin-bottom: 24px;">
                         <label class="contact-form-label">Message</label>
-                        <textarea class="contact-form-textarea"></textarea>
+                        <textarea class="contact-form-textarea" name="message">{{ old('message') }}</textarea>
                     </div>
                     <div class="contact-form-checkbox-wrapper">
                         <input type="checkbox" class="contact-form-checkbox" id="consent">

@@ -21,7 +21,7 @@
                 <tbody>
                     @foreach ($orders as $order)
                         <tr>
-                            <td>#{{ $order->id }}</td>
+                            <td>{{ $order->id }}</td>
                             <td>{{ $order->email }}</td>
                             <td>{{ strtoupper($order->payment_method) }}</td>
                             <td>{{ ucfirst($order->status) }}</td>

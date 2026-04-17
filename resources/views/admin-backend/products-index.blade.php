@@ -26,7 +26,7 @@
                 <tbody>
                     @foreach ($products as $product)
                         <tr>
-                            <td>#{{ $product->id }}</td>
+                            <td>{{ $product->id }}</td>
                             <td>{{ $product->title }}</td>
                             <td>${{ number_format((float) ($product->original_price ?? 0), 2) }}</td>
                             <td>${{ number_format((float) $product->price, 2) }}</td>
@@ -39,7 +39,13 @@
                                 <form method="POST" action="{{ route('admin.products.destroy', $product) }}" style="display:inline-block;">
                                     @csrf
                                     @method('DELETE')
-                                    <button class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this product?')" type="submit">Delete</button>
+                                    <button
+                                        class="btn btn-sm btn-outline-danger"
+                                        onclick="return confirmWithSweetAlert(event, this.form, 'Delete this product?')"
+                                        type="submit"
+                                    >
+                                        Delete
+                                    </button>
                                 </form>
                             </td>
                         </tr>
@@ -53,6 +59,30 @@
 
 @push('panel-scripts')
 <script>
+    function confirmWithSweetAlert(event, form, message) {
+        event.preventDefault();
+
+        if (window.Swal) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Please confirm',
+                text: message,
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it',
+                cancelButtonText: 'Cancel',
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d'
+            }).then((result) => {
+                if (result.isConfirmed && form) {
+                    form.submit();
+                }
+            });
+            return false;
+        }
+
+        return window.confirm(message);
+    }
+
     $(function () {
         $('#products-table').DataTable({
             responsive: false,

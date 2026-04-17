@@ -61,7 +61,7 @@
                                 <button
                                     class="btn btn-sm btn-outline-danger"
                                     type="button"
-                                    onclick="if(confirm('Remove current main image?')){ document.getElementById('main-image-delete-form').submit(); }"
+                                    onclick="confirmWithSweetAlert('Remove current main image?', function(){ document.getElementById('main-image-delete-form').submit(); })"
                                 >
                                     Remove Main Image
                                 </button>
@@ -133,7 +133,7 @@
                                         <button
                                             class="btn btn-sm btn-outline-danger w-100"
                                             type="button"
-                                            onclick="if(confirm('Delete this gallery image?')){ document.getElementById('gallery-delete-{{ $image->id }}').submit(); }"
+                                            onclick="confirmWithSweetAlert('Delete this gallery image?', function(){ document.getElementById('gallery-delete-{{ $image->id }}').submit(); })"
                                         >
                                             Delete
                                         </button>
@@ -200,6 +200,30 @@
 
 @push('panel-scripts')
 <script>
+    function confirmWithSweetAlert(message, onConfirm) {
+        if (window.Swal) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Please confirm',
+                text: message,
+                showCancelButton: true,
+                confirmButtonText: 'Yes, continue',
+                cancelButtonText: 'Cancel',
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d'
+            }).then((result) => {
+                if (result.isConfirmed && typeof onConfirm === 'function') {
+                    onConfirm();
+                }
+            });
+            return;
+        }
+
+        if (window.confirm(message) && typeof onConfirm === 'function') {
+            onConfirm();
+        }
+    }
+
     function removeRow(button) {
         const row = button.closest('.input-group');
         if (row) row.remove();

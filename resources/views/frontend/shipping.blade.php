@@ -51,7 +51,7 @@
                         </div>
                         <input type="email" placeholder="Email" class="form-input" required value="{{ old('email', $checkout['email'] ?? '') }}">
                         <div class="checkbox-group">
-                            <input type="checkbox" id="email-me">
+                            <input type="checkbox" id="email-me" {{ old('newsletter_opt_in', $checkout['newsletter_opt_in'] ?? false) ? 'checked' : '' }}>
                             <label for="email-me">Email me with news and offers</label>
                         </div>
                     </div>

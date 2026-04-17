@@ -82,6 +82,12 @@
 @endpush
 
 @section('content')
+@php
+    $authUser = auth()->user();
+    $profileImageUrl = !empty($authUser->profile_image)
+        ? asset('storage/' . $authUser->profile_image)
+        : asset('frontend/images/doc.jpg');
+@endphp
 <div class="wrapper">
     <nav id="sidebar" class="sidebar js-sidebar">
         <div class="sidebar-content js-simplebar">
@@ -90,7 +96,7 @@
             </a>
 
             <ul class="sidebar-nav">
-                <!-- <li class="sidebar-header">Ecommerce Modules</li> -->
+                <li class="sidebar-header">Ecommerce Modules</li>
                 <li class="sidebar-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                     <a class="sidebar-link" href="{{ route('admin.dashboard') }}">
                         <i class="align-middle" data-feather="home"></i> <span class="align-middle">Dashboard</span>
@@ -106,14 +112,120 @@
                         <i class="align-middle" data-feather="shopping-cart"></i> <span class="align-middle">Orders</span>
                     </a>
                 </li>
-                <li class="sidebar-item {{ request()->routeIs('admin.reviews.*') ? 'active' : '' }}">
-                    <a class="sidebar-link" href="{{ route('admin.reviews.index') }}">
-                        <i class="align-middle" data-feather="star"></i> <span class="align-middle">Reviews</span>
-                    </a>
-                </li>
                 <li class="sidebar-item {{ request()->routeIs('admin.subscribers.*') ? 'active' : '' }}">
                     <a class="sidebar-link" href="{{ route('admin.subscribers.index') }}">
                         <i class="align-middle" data-feather="mail"></i> <span class="align-middle">Subscribers</span>
+                    </a>
+                </li>
+                <li class="sidebar-item {{ request()->routeIs('admin.profile.*') ? 'active' : '' }}">
+                    <a class="sidebar-link" href="{{ route('admin.profile.show') }}">
+                        <i class="align-middle" data-feather="user"></i> <span class="align-middle">Profile</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-header">Coming Soon</li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="#" onclick="event.preventDefault();">
+                        <i class="align-middle" data-feather="truck"></i>
+                        <span class="align-middle">Shipping Module</span>
+                        
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="#" onclick="event.preventDefault();">
+                        <i class="align-middle" data-feather="archive"></i>
+                        <span class="align-middle">Inventory Management</span>
+                        
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="#" onclick="event.preventDefault();">
+                        <i class="align-middle" data-feather="rotate-ccw"></i>
+                        <span class="align-middle">Returns Center</span>
+                        
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="#" onclick="event.preventDefault();">
+                        <i class="align-middle" data-feather="tag"></i>
+                        <span class="align-middle">Coupon Manager</span>
+                        
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="#" onclick="event.preventDefault();">
+                        <i class="align-middle" data-feather="percent"></i>
+                        <span class="align-middle">Discount Rules</span>
+                        
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="#" onclick="event.preventDefault();">
+                        <i class="align-middle" data-feather="gift"></i>
+                        <span class="align-middle">Gift Cards</span>
+                        
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="#" onclick="event.preventDefault();">
+                        <i class="align-middle" data-feather="users"></i>
+                        <span class="align-middle">Customers</span>
+                        
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="#" onclick="event.preventDefault();">
+                        <i class="align-middle" data-feather="message-square"></i>
+                        <span class="align-middle">Support Tickets</span>
+                        
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="#" onclick="event.preventDefault();">
+                        <i class="align-middle" data-feather="send"></i>
+                        <span class="align-middle">Email Campaigns</span>
+                        
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="#" onclick="event.preventDefault();">
+                        <i class="align-middle" data-feather="bar-chart-2"></i>
+                        <span class="align-middle">Sales Reports</span>
+                        
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="#" onclick="event.preventDefault();">
+                        <i class="align-middle" data-feather="activity"></i>
+                        <span class="align-middle">Traffic Analytics</span>
+                        
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="#" onclick="event.preventDefault();">
+                        <i class="align-middle" data-feather="credit-card"></i>
+                        <span class="align-middle">Payments</span>
+                        
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="#" onclick="event.preventDefault();">
+                        <i class="align-middle" data-feather="shield"></i>
+                        <span class="align-middle">Fraud Protection</span>
+                        
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="#" onclick="event.preventDefault();">
+                        <i class="align-middle" data-feather="settings"></i>
+                        <span class="align-middle">Store Settings</span>
+                        
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="#" onclick="event.preventDefault(); document.getElementById('nav-logout-form').submit();">
+                        <i class="align-middle" data-feather="log-out"></i>
+                        <span class="align-middle">Sign Out</span>
                     </a>
                 </li>
             </ul>
@@ -138,14 +250,14 @@
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle d-inline-block" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="{{ asset('frontend/images/doc.jpg') }}" class="avatar img-fluid rounded me-1" alt="Profile" width="36" height="36" />
-                            <span class="text-dark d-none d-md-inline">Charles Hall</span>
+                            <img src="{{ $profileImageUrl }}" class="avatar img-fluid rounded me-1" alt="Profile" width="36" height="36" />
+                            <span class="text-dark d-none d-md-inline">{{ $authUser->name ?? 'Admin User' }}</span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-end">
-                            <a class="dropdown-item" href="#">
+                            <a class="dropdown-item" href="{{ route('admin.profile.show') }}">
                                 <i class="align-middle me-1" data-feather="user"></i> Profile
                             </a>
-                            <a class="dropdown-item" href="#">
+                            <a class="dropdown-item" href="{{ route('admin.profile.show') }}">
                                 <i class="align-middle me-1" data-feather="settings"></i> Settings & Privacy
                             </a>
                             <div class="dropdown-divider"></div>

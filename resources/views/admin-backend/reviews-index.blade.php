@@ -1,56 +1,43 @@
 @extends('admin-backend.main.panel')
 @section('title', 'Reviews')
 @section('panel-content')
-<h1 class="h3 mb-3">Reviews</h1>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">Reviews</h1>
+</div>
+
 <div class="card">
-    <div class="card-body">
-        <div class="table-responsive">
-            <table id="reviews-table" class="table table-striped table-bordered nowrap w-100">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Rating</th>
-                        <th>Status</th>
-                        <th>Comment</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($reviews as $review)
-                        <tr>
-                            <td>#{{ $review->id }}</td>
-                            <td>{{ $review->name }}</td>
-                            <td>{{ $review->email }}</td>
-                            <td>{{ $review->rating }}/5</td>
-                            <td>{{ ucfirst($review->status) }}</td>
-                            <td>{{ $review->comment }}</td>
-                            <td>
-                                <form method="POST" action="{{ route('admin.reviews.approve', $review) }}" style="display:inline">@csrf <button class="btn btn-sm btn-success">Approve</button></form>
-                                <form method="POST" action="{{ route('admin.reviews.reject', $review) }}" style="display:inline">@csrf <button class="btn btn-sm btn-outline-danger">Reject</button></form>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
+    <div class="card-body py-5">
+        <div class="text-center mb-4">
+            <h2 class="h3 mb-2">Reviews Module Coming Soon</h2>
+            <p class="text-muted mb-0">
+                We are preparing an upgraded review moderation workspace for your store.
+            </p>
+        </div>
+
+        <div class="row g-3 justify-content-center" style="max-width: 820px; margin: 0 auto;">
+            <div class="col-md-6">
+                <div class="border rounded p-3 h-100 bg-light">
+                    <h6 class="mb-2">What is coming next</h6>
+                    <ul class="mb-0 ps-3">
+                        <li>Smart spam detection and auto-filtering</li>
+                        <li>Bulk approve/reject actions</li>
+                        <li>Rating analytics and trends</li>
+                        <li>Customer reply workflow</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="border rounded p-3 h-100 bg-light">
+                    <h6 class="mb-2">Planned eCommerce modules</h6>
+                    <ul class="mb-0 ps-3">
+                        <li>Shipping Module</li>
+                        <li>Inventory Management</li>
+                        <li>Returns Management</li>
+                        <li>Coupon & Promotions</li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 @endsection
-
-@push('panel-scripts')
-<script>
-    $(function () {
-        $('#reviews-table').DataTable({
-            responsive: false,
-            scrollX: true,
-            autoWidth: false,
-            pageLength: 10,
-            lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
-            dom: 'Bfrtip',
-            buttons: ['copy', 'csv', 'excel', 'pdf', 'print', 'colvis']
-        });
-    });
-</script>
-@endpush

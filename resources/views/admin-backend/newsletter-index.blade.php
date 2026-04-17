@@ -16,7 +16,7 @@
                 <tbody>
                     @foreach ($subscriptions as $subscription)
                         <tr>
-                            <td>#{{ $subscription->id }}</td>
+                            <td>{{ $subscription->id }}</td>
                             <td>{{ $subscription->email }}</td>
                             <td>{{ $subscription->created_at }}</td>
                         </tr>

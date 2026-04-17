@@ -410,6 +410,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const zipcode = document.querySelector('input[placeholder="ZIP code"]')?.value?.trim() || '';
                 const country = document.querySelector('.form-section select.form-input')?.value || 'United States';
                 const mobile = document.querySelector('input[type="tel"]')?.value?.trim() || '';
+                const newsletterOptIn = document.getElementById('email-me')?.checked ? 1 : 0;
 
                 if (!email || !firstName || !lastName || !address || !city || !state || !zipcode || !mobile) {
                     showUiMessage('error', 'Please fill first name, last name, address, city, state, ZIP code, and mobile to continue.');
@@ -429,6 +430,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     state,
                     zipcode,
                     mobile,
+                    newsletter_opt_in: newsletterOptIn,
                     shipping_country: country,
                 };
                 Object.entries(payload).forEach(([k, v]) => {
