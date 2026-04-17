@@ -39,12 +39,17 @@
                 </div>
 
                 <form class="checkout-form">
+                    @if ($errors->any())
+                        <div class="alert alert-danger" style="margin-bottom:16px;">
+                            {{ $errors->first() }}
+                        </div>
+                    @endif
                     <div class="form-section">
                         <div class="section-header">
                             <h2>Contact</h2>
                             <a href="#" class="login-link">Sign in</a>
                         </div>
-                        <input type="email" placeholder="Email" class="form-input" required>
+                        <input type="email" placeholder="Email" class="form-input" required value="{{ old('email', $checkout['email'] ?? '') }}">
                         <div class="checkbox-group">
                             <input type="checkbox" id="email-me">
                             <label for="email-me">Email me with news and offers</label>
@@ -57,22 +62,27 @@
                             <option>United States</option>
                         </select>
                         <div class="form-row">
-                            <input type="text" placeholder="First name" class="form-input" required>
-                            <input type="text" placeholder="Last name" class="form-input" required>
+                            <input type="text" placeholder="First name" class="form-input" required value="{{ old('first_name', explode(' ', $checkout['shipping_name'] ?? '', 2)[0] ?? '') }}">
+                            <input type="text" placeholder="Last name" class="form-input" required value="{{ old('last_name', explode(' ', $checkout['shipping_name'] ?? '', 2)[1] ?? '') }}">
                         </div>
                         <input type="text" placeholder="Company (optional)" class="form-input">
-                        <input type="text" placeholder="Address" class="form-input" required>
+                        <input type="text" placeholder="Address" class="form-input" required value="{{ old('address', $checkout['shipping_line1'] ?? '') }}">
                         <input type="text" placeholder="Apartment, suite, etc. (optional)" class="form-input">
                         <div class="form-row three-col">
-                            <input type="text" placeholder="City" class="form-input" required>
+                            <input type="text" placeholder="City" class="form-input" required value="{{ old('city', $checkout['shipping_city'] ?? '') }}">
                             <select class="form-input">
-                                <option>State</option>
+                                <option value="">State</option>
+                                <option value="California" {{ old('state', $checkout['shipping_state'] ?? '') === 'California' ? 'selected' : '' }}>California</option>
+                                <option value="Texas" {{ old('state', $checkout['shipping_state'] ?? '') === 'Texas' ? 'selected' : '' }}>Texas</option>
+                                <option value="Florida" {{ old('state', $checkout['shipping_state'] ?? '') === 'Florida' ? 'selected' : '' }}>Florida</option>
+                                <option value="New York" {{ old('state', $checkout['shipping_state'] ?? '') === 'New York' ? 'selected' : '' }}>New York</option>
+                                <option value="Illinois" {{ old('state', $checkout['shipping_state'] ?? '') === 'Illinois' ? 'selected' : '' }}>Illinois</option>
                             </select>
-                            <input type="text" placeholder="ZIP code" class="form-input" required>
+                            <input type="text" placeholder="ZIP code" class="form-input" required value="{{ old('zipcode', $checkout['shipping_zipcode'] ?? '') }}">
                         </div>
                         <input type="tel"
                             placeholder="Enter mobile # for order & shipping text updates. Reply STOP to uns...."
-                            class="form-input">
+                            class="form-input" value="{{ old('mobile', $checkout['phone'] ?? '') }}">
                         <div class="checkout-legal-checkbox">
                             <input type="checkbox" id="sms-consent">
                             <label for="sms-consent">

@@ -363,14 +363,21 @@ document.addEventListener('DOMContentLoaded', function() {
         if (continueBtn) {
             continueBtn.addEventListener('click', function(e) {
                 e.preventDefault();
-                const email = document.querySelector('input[type="email"]')?.value || 'guest@example.com';
+                const email = document.querySelector('input[type="email"]')?.value?.trim() || '';
                 const names = document.querySelectorAll('input[placeholder="First name"], input[placeholder="Last name"]');
-                const firstName = names[0]?.value || 'Guest';
-                const lastName = names[1]?.value || 'User';
-                const address = document.querySelector('input[placeholder="Address"]')?.value || 'Address';
-                const city = document.querySelector('input[placeholder="City"]')?.value || 'City';
-                const country = document.querySelector('.checkout-form select.form-input')?.value || 'United States';
-                const phone = document.querySelector('input[type="tel"]')?.value || '';
+                const firstName = names[0]?.value?.trim() || '';
+                const lastName = names[1]?.value?.trim() || '';
+                const address = document.querySelector('input[placeholder="Address"]')?.value?.trim() || '';
+                const city = document.querySelector('input[placeholder="City"]')?.value?.trim() || '';
+                const state = document.querySelector('.form-row.three-col select.form-input')?.value?.trim() || '';
+                const zipcode = document.querySelector('input[placeholder="ZIP code"]')?.value?.trim() || '';
+                const country = document.querySelector('.form-section select.form-input')?.value || 'United States';
+                const mobile = document.querySelector('input[type="tel"]')?.value?.trim() || '';
+
+                if (!email || !firstName || !lastName || !address || !city || !state || !zipcode || !mobile) {
+                    alert('Please fill first name, last name, address, city, state, ZIP code, and mobile to continue.');
+                    return;
+                }
 
                 const form = document.createElement('form');
                 form.method = 'POST';
@@ -378,15 +385,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 const payload = {
                     _token: csrfToken,
                     email,
-                    phone,
-                    shipping_name: `${firstName} ${lastName}`.trim(),
-                    shipping_line1: address,
-                    shipping_city: city,
+                    first_name: firstName,
+                    last_name: lastName,
+                    address,
+                    city,
+                    state,
+                    zipcode,
+                    mobile,
                     shipping_country: country,
-                    billing_name: `${firstName} ${lastName}`.trim(),
-                    billing_line1: address,
-                    billing_city: city,
-                    billing_country: country
                 };
                 Object.entries(payload).forEach(([k, v]) => {
                     const input = document.createElement('input');
@@ -403,6 +409,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Shipping method step: submit selected option via POST.
     if (window.location.pathname === '/checkout-shipping') {
+        const shippingSummaryAmount = document.getElementById('shipping-summary-amount');
+        const shippingSummaryTotal = document.getElementById('shipping-summary-total');
+        const subtotalNode = document.querySelector('.summary-totals .total-row span:last-child');
+        const parsedSubtotal = subtotalNode ? parseFloat((subtotalNode.textContent || '').replace(/[^0-9.]/g, '')) : 0;
+        const shippingOptions = document.querySelectorAll('input[name="shipping_method"]');
+
+        shippingOptions.forEach(option => {
+            option.addEventListener('change', function() {
+                document.querySelectorAll('.shipping-option').forEach(opt => opt.classList.remove('selected'));
+                if (this.checked) {
+                    this.closest('.shipping-option')?.classList.add('selected');
+                }
+
+                const shippingCost = this.value === 'priority' ? 10 : 0;
+                if (shippingSummaryAmount) {
+                    shippingSummaryAmount.textContent = shippingCost > 0 ? `$${shippingCost.toFixed(2)}` : 'FREE';
+                }
+                if (shippingSummaryTotal) {
+                    shippingSummaryTotal.textContent = `$${(parsedSubtotal + shippingCost).toFixed(2)}`;
+                }
+            });
+        });
+
         const continueBtn = document.querySelector('a.continue-btn');
         if (continueBtn) {
             continueBtn.addEventListener('click', function(e) {

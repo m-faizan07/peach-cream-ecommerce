@@ -41,16 +41,16 @@
                     <p class="shipping-sub">First Shipment</p>
                     
                     <div class="shipping-options-box">
-                        <label class="shipping-option">
-                            <input type="radio" name="shipping_method" value="free">
+                        <label class="shipping-option {{ ($shippingMethod ?? 'free') === 'free' ? 'selected' : '' }}">
+                            <input type="radio" name="shipping_method" value="free" {{ ($shippingMethod ?? 'free') === 'free' ? 'checked' : '' }}>
                             <span class="radio-custom"></span>
                             <div class="option-info">
                                 <span class="option-name">5 to 8 business days • Orders $99.01 and up</span>
                             </div>
                             <span class="option-price">FREE</span>
                         </label>
-                        <label class="shipping-option selected">
-                            <input type="radio" name="shipping_method" value="priority" checked>
+                        <label class="shipping-option {{ ($shippingMethod ?? 'free') === 'paid' ? 'selected' : '' }}">
+                            <input type="radio" name="shipping_method" value="priority" {{ ($shippingMethod ?? 'free') === 'paid' ? 'checked' : '' }}>
                             <span class="radio-custom"></span>
                             <div class="option-info">
                                 <span class="option-name">Priority 2-3 Business Days</span>
@@ -109,7 +109,7 @@
                     </div>
                     <div class="total-row">
                         <span>Shipping</span>
-                        <span>FREE</span>
+                        <span id="shipping-summary-amount">{{ ($shippingCost ?? 0) > 0 ? '$' . number_format($shippingCost, 2) : 'FREE' }}</span>
                     </div>
                     <div class="total-row">
                         <span>Estimated Taxes</span>
@@ -119,7 +119,7 @@
                         <span>Total</span>
                         <div class="total-price">
                             <span class="currency">USD</span>
-                            <span class="price">${{ number_format($subtotal, 2) }}</span>
+                            <span class="price" id="shipping-summary-total">${{ number_format($subtotal + ($shippingCost ?? 0), 2) }}</span>
                         </div>
                     </div>
                 </div>

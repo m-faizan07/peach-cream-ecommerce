@@ -34,19 +34,37 @@ class CheckoutController extends Controller
 
     public function shippingInfo(Request $request)
     {
-        if ($request->hasAny(['email', 'shipping_name', 'shipping_line1', 'shipping_city'])) {
+        if ($request->isMethod('post')) {
+            $data = $request->validate([
+                'email' => ['required', 'email'],
+                'first_name' => ['required', 'string', 'max:100'],
+                'last_name' => ['required', 'string', 'max:100'],
+                'address' => ['required', 'string', 'max:255'],
+                'city' => ['required', 'string', 'max:100'],
+                'state' => ['required', 'string', 'max:100'],
+                'zipcode' => ['required', 'string', 'max:20'],
+                'mobile' => ['required', 'string', 'max:50'],
+                'shipping_country' => ['nullable', 'string', 'max:100'],
+            ]);
+
             $checkout = session('checkout', []);
-            $checkout['email'] = (string) $request->input('email', $checkout['email'] ?? 'guest@example.com');
-            $checkout['phone'] = (string) $request->input('phone', $checkout['phone'] ?? '');
-            $checkout['shipping_name'] = (string) $request->input('shipping_name', $checkout['shipping_name'] ?? 'Guest User');
-            $checkout['shipping_line1'] = (string) $request->input('shipping_line1', $checkout['shipping_line1'] ?? 'Address');
-            $checkout['shipping_city'] = (string) $request->input('shipping_city', $checkout['shipping_city'] ?? 'City');
-            $checkout['shipping_country'] = (string) $request->input('shipping_country', $checkout['shipping_country'] ?? 'United States');
-            $checkout['billing_name'] = (string) ($request->input('billing_name') ?: $checkout['shipping_name']);
-            $checkout['billing_line1'] = (string) ($request->input('billing_line1') ?: $checkout['shipping_line1']);
-            $checkout['billing_city'] = (string) ($request->input('billing_city') ?: $checkout['shipping_city']);
-            $checkout['billing_country'] = (string) ($request->input('billing_country') ?: $checkout['shipping_country']);
+            $checkout['email'] = (string) $data['email'];
+            $checkout['phone'] = (string) $data['mobile'];
+            $checkout['shipping_name'] = trim((string) $data['first_name'] . ' ' . (string) $data['last_name']);
+            $checkout['shipping_line1'] = (string) $data['address'];
+            $checkout['shipping_city'] = (string) $data['city'];
+            $checkout['shipping_state'] = (string) $data['state'];
+            $checkout['shipping_zipcode'] = (string) $data['zipcode'];
+            $checkout['shipping_country'] = (string) ($data['shipping_country'] ?? 'United States');
+            $checkout['billing_name'] = $checkout['shipping_name'];
+            $checkout['billing_line1'] = $checkout['shipping_line1'];
+            $checkout['billing_city'] = $checkout['shipping_city'];
+            $checkout['billing_state'] = $checkout['shipping_state'];
+            $checkout['billing_zipcode'] = $checkout['shipping_zipcode'];
+            $checkout['billing_country'] = $checkout['shipping_country'];
             session(['checkout' => $checkout]);
+
+            return redirect()->route('frontend.checkout-shipping');
         }
 
         $product = $this->resolveProduct();
@@ -83,10 +101,17 @@ class CheckoutController extends Controller
 
     public function shippingMethod(Request $request)
     {
-        if ($request->filled('shipping_method')) {
+        if ($request->isMethod('post')) {
+            $data = $request->validate([
+                'shipping_method' => ['required', 'in:free,paid,priority'],
+            ]);
+
             $checkout = session('checkout', []);
-            $checkout['shipping_method'] = $request->input('shipping_method');
+            $selectedMethod = $data['shipping_method'];
+            $checkout['shipping_method'] = $selectedMethod === 'priority' ? 'paid' : $selectedMethod;
             session(['checkout' => $checkout]);
+
+            return redirect()->route('frontend.payment');
         }
 
         $product = $this->resolveProduct();
@@ -94,8 +119,10 @@ class CheckoutController extends Controller
         $unit = max($product['price'] - $product['discount'], 0);
         $subtotal = $unit * $qty;
         $checkout = session('checkout', []);
+        $shippingMethod = $checkout['shipping_method'] ?? 'free';
+        $shippingCost = $shippingMethod === 'paid' ? 10 : 0;
 
-        return view('frontend.checkout-shipping', compact('product', 'qty', 'unit', 'subtotal', 'checkout'));
+        return view('frontend.checkout-shipping', compact('product', 'qty', 'unit', 'subtotal', 'checkout', 'shippingMethod', 'shippingCost'));
     }
 
     public function saveShippingMethod(Request $request)
@@ -166,12 +193,16 @@ class CheckoutController extends Controller
                     'name' => $checkout['shipping_name'],
                     'line1' => $checkout['shipping_line1'],
                     'city' => $checkout['shipping_city'],
+                    'state' => $checkout['shipping_state'] ?? null,
+                    'zipcode' => $checkout['shipping_zipcode'] ?? null,
                     'country' => $checkout['shipping_country'],
                 ],
                 'billing_address' => [
                     'name' => $checkout['billing_name'],
                     'line1' => $checkout['billing_line1'],
                     'city' => $checkout['billing_city'],
+                    'state' => $checkout['billing_state'] ?? null,
+                    'zipcode' => $checkout['billing_zipcode'] ?? null,
                     'country' => $checkout['billing_country'],
                 ],
                 'shipping_method' => $checkout['shipping_method'],

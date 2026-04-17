@@ -36,7 +36,9 @@
                     </div>
                     <div class="review-row">
                         <span class="review-label">Method</span>
-                        <span class="review-value">5 to 8 business days • FREE</span>
+                        <span class="review-value">
+                            {{ ($checkout['shipping_method'] ?? 'free') === 'paid' ? 'Priority 2-3 Business Days • $10.00' : '5 to 8 business days • FREE' }}
+                        </span>
                         <a href="{{ route('frontend.checkout-shipping') }}" class="review-change">change</a>
                     </div>
                 </div>

@@ -9,7 +9,7 @@
             </a>
 
             <ul class="sidebar-nav">
-                <li class="sidebar-header">Ecommerce Modules</li>
+                <!-- <li class="sidebar-header">Ecommerce Modules</li> -->
                 <li class="sidebar-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                     <a class="sidebar-link" href="{{ route('admin.dashboard') }}">
                         <i class="align-middle" data-feather="home"></i> <span class="align-middle">Dashboard</span>
