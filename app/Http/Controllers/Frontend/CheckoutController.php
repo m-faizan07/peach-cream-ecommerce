@@ -7,6 +7,7 @@ use App\Models\NewsletterSubscription;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
+use App\Models\SiteSetting;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -28,11 +29,15 @@ class CheckoutController extends Controller
             ];
         }
 
+        $settings = SiteSetting::query()->first();
+        $fallbackOriginal = $settings ? (float) $settings->fallback_original_price : 60.0;
+        $fallbackSale = $settings ? (float) $settings->fallback_sale_price : 50.0;
+
         return [
             'model' => null,
             'id' => 1,
-            'price' => 50.0,
-            'discount' => 10.0,
+            'price' => max($fallbackSale, 0),
+            'discount' => max($fallbackOriginal - $fallbackSale, 0),
         ];
     }
 

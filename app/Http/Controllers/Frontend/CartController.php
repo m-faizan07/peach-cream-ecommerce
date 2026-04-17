@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\SiteSetting;
 use Illuminate\Http\Request;
 
 class CartController extends Controller
@@ -21,8 +22,17 @@ class CartController extends Controller
             ];
         }
 
-        // Static fallback values matching current frontend presentation.
-        return ['id' => 1, 'quantity' => 99, 'price' => 50.0, 'discount' => 10.0];
+        $settings = SiteSetting::query()->first();
+        $fallbackQuantity = $settings ? (int) $settings->fallback_quantity : 99;
+        $fallbackOriginal = $settings ? (float) $settings->fallback_original_price : 60.0;
+        $fallbackSale = $settings ? (float) $settings->fallback_sale_price : 50.0;
+
+        return [
+            'id' => 1,
+            'quantity' => max($fallbackQuantity, 0),
+            'price' => max($fallbackSale, 0),
+            'discount' => max($fallbackOriginal - $fallbackSale, 0),
+        ];
     }
 
     public function index()

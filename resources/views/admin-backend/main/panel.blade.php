@@ -122,6 +122,11 @@
                         <i class="align-middle" data-feather="user"></i> <span class="align-middle">Profile</span>
                     </a>
                 </li>
+                <li class="sidebar-item {{ request()->routeIs('admin.settings.privacy.*') ? 'active' : '' }}">
+                    <a class="sidebar-link" href="{{ route('admin.settings.privacy.show') }}">
+                        <i class="align-middle" data-feather="settings"></i> <span class="align-middle">Settings & Privacy</span>
+                    </a>
+                </li>
 
                 <li class="sidebar-header">Coming Soon</li>
                 <li class="sidebar-item">
@@ -216,7 +221,7 @@
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a class="sidebar-link" href="#" onclick="event.preventDefault();">
+                    <a class="sidebar-link" href="{{ route('admin.settings.privacy.show') }}">
                         <i class="align-middle" data-feather="settings"></i>
                         <span class="align-middle">Store Settings</span>
                         
@@ -257,7 +262,7 @@
                             <a class="dropdown-item" href="{{ route('admin.profile.show') }}">
                                 <i class="align-middle me-1" data-feather="user"></i> Profile
                             </a>
-                            <a class="dropdown-item" href="{{ route('admin.profile.show') }}">
+                            <a class="dropdown-item" href="{{ route('admin.settings.privacy.show') }}">
                                 <i class="align-middle me-1" data-feather="settings"></i> Settings & Privacy
                             </a>
                             <div class="dropdown-divider"></div>

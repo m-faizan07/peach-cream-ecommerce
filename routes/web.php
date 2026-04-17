@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\ProfileController as AdminProfileController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
+use App\Http\Controllers\Admin\SettingsPrivacyController as AdminSettingsPrivacyController;
 use App\Http\Controllers\Frontend\CartController;
 use App\Http\Controllers\Frontend\CheckoutController;
 use App\Http\Controllers\Frontend\PublicFormController;
@@ -73,5 +74,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/subscribers', [AdminNewsletterController::class, 'index'])->name('subscribers.index');
     Route::get('/profile', [AdminProfileController::class, 'show'])->name('profile.show');
     Route::post('/profile', [AdminProfileController::class, 'update'])->name('profile.update');
+    Route::get('/settings-privacy', [AdminSettingsPrivacyController::class, 'show'])->name('settings.privacy.show');
+    Route::post('/settings-privacy', [AdminSettingsPrivacyController::class, 'update'])->name('settings.privacy.update');
 });
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Review;
+use App\Models\SiteSetting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -13,13 +14,17 @@ class ShopController extends Controller
     public function product()
     {
         $product = Product::with('images')->latest()->first();
+        $settings = SiteSetting::query()->first();
+        $fallbackOriginal = $settings ? (float) $settings->fallback_original_price : 60.00;
+        $fallbackSale = $settings ? (float) $settings->fallback_sale_price : 50.00;
+        $fallbackQuantity = $settings ? (int) $settings->fallback_quantity : 99;
 
         $defaults = [
             'title' => 'Peach Cream',
             'tagline' => 'A skincare-first approach to comfort, hydration, and barrier support. No steroids. No numbing. Just happy skin.',
             'description' => 'Peach Cream is a daily perianal skincare cream - not a drug, just clean, clinical-grade care.',
-            'price' => 50.00,
-            'original_price' => 60.00,
+            'price' => $fallbackSale,
+            'original_price' => $fallbackOriginal,
             'review_count' => 243,
             'rating_value' => 5.0,
             'main_image' => 'images/what-make-you-happy.png',
@@ -63,7 +68,7 @@ class ShopController extends Controller
                 ->all(),
             'badges' => ($product && !empty($product->badges_json)) ? $product->badges_json : $defaults['badges'],
             'tabs' => ($product && !empty($product->tabs_json)) ? $product->tabs_json : $defaults['tabs'],
-            'in_stock' => $product ? ((int) $product->quantity > 0) : true,
+            'in_stock' => $product ? ((int) $product->quantity > 0) : ($fallbackQuantity > 0),
         ];
 
         if (empty($viewData['gallery_images'])) {
