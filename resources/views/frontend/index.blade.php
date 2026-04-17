@@ -1,16 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('frontend.main.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Peach Cream | Premium Experience</title>
-    <link rel="stylesheet" href="index.css">
-</head>
+@section('title', 'Peach Cream | Premium Experience')
 
-<body>
-    <!-- Header Placeholder -->
-    <div id="header-placeholder"></div>
+@section('content')
 
     <!-- Hero Section -->
     <section class="hero">
@@ -19,7 +11,7 @@
             <h1>Finally, daily care for your most sensitive skin.</h1>
             <p>Peach Cream soothes, hydrates, and supports your delicate skin barrier no steroids, no numbing agents.
                 Just clean, skin identical ingredients your peach actually needs.</p>
-            <a href="Product-page.html" class="shop-btn">Shop Now</a>
+            <a href="{{ route('frontend.product') }}" class="shop-btn">Shop Now</a>
         </div>
         <div class="hero-image">
             <img src="images/hero-img.png" alt="Premium Peach Cream Bottle">
@@ -205,7 +197,7 @@
                 </div>
             </div>
 
-            <a href="Product-page.html" class="shop-btn ingredients-btn-desktop">Shop Now</a>
+            <a href="{{ route('frontend.product') }}" class="shop-btn ingredients-btn-desktop">Shop Now</a>
         </div>
 
         <!-- Mobile-only: icons + button appear BELOW the image -->
@@ -228,7 +220,7 @@
                     <span>Bisabolol</span>
                 </div>
             </div>
-            <a href="Product-page.html" class="shop-btn">Shop Now</a>
+            <a href="{{ route('frontend.product') }}" class="shop-btn">Shop Now</a>
         </div>
     </section>
 
@@ -490,7 +482,7 @@
             <div class="cta-content">
                 <h2>Ready to give your peach the care it deserves?</h2>
                 <p>Join the movement that's making perianal skincare a normal part of self-care.</p>
-                <a href="Product-page.html" class="cta-btn-large">Shop Peach Cream</a>
+                <a href="{{ route('frontend.product') }}" class="cta-btn-large">Shop Peach Cream</a>
             </div>
             <div class="cta-image">
                 <img src="images/readytogive.png" alt="Hand holding Peach Cream">
@@ -498,10 +490,4 @@
         </div>
     </section>
 
-    <!-- Footer Placeholder -->
-    <div id="footer-placeholder"></div>
-
-    <script src="index.js"></script>
-</body>
-
-</html>
+@endsection

@@ -1,26 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('frontend.main.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout | Peach Cream</title>
-    <link rel="stylesheet" href="index.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
+@section('title', 'Checkout | Peach Cream')
 
-<body>
+@section('content')
     <div class="checkout-layout">
         <!-- Left: Form Section -->
         <main class="checkout-main">
             <div class="checkout-content">
                 <header class="checkout-header-centered">
-                    <a href="index.html" class="checkout-logo-centered">
+                    <a href="{{ route('frontend.home') }}" class="checkout-logo-centered">
                         <img src="images/peachlogo.png" alt="Peach Cream Logo">
                         <h1>Peach Cream</h1>
                     </a>
                     <nav class="checkout-breadcrumb-centered">
-                        <a href="cart.html">Cart</a>
+                        <a href="{{ route('frontend.cart') }}">Cart</a>
                         <span class="sep"><i class="fa-solid fa-chevron-right"></i></span>
                         <span class="active">Information</span>
                         <span class="sep"><i class="fa-solid fa-chevron-right"></i></span>
@@ -113,11 +106,11 @@
                     </div>
 
                     <div class="checkout-form-footer">
-                        <a href="cart.html" class="return-link">
+                        <a href="{{ route('frontend.cart') }}" class="return-link">
                             <i class="fa-solid fa-chevron-left"></i>
                             Return to cart
                         </a>
-                        <a href="checkout-shipping.html" class="continue-btn" style="text-decoration:none; display:inline-block; text-align:center;">Continue To Shipping</a>
+                        <a href="{{ route('frontend.checkout-shipping') }}" class="continue-btn" style="text-decoration:none; display:inline-block; text-align:center;">Continue To Shipping</a>
                     </div>
                 </form>
                 <div class="footer-divider"></div>
@@ -182,7 +175,4 @@
     </div>
 
 
-    <script src="index.js"></script>
-</body>
-
-</html>
+@endsection

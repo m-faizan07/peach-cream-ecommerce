@@ -1,16 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('frontend.main.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us | Peach Cream</title>
-    <link rel="stylesheet" href="index.css">
-</head>
+@section('title', 'Contact Us | Peach Cream')
 
-<body>
-    <!-- Header Placeholder -->
-    <div id="header-placeholder"></div>
+@section('content')
 
     <!-- Main Contact Section -->
     <section class="contact-main-section">
@@ -115,11 +107,4 @@
     </section>
 
 
-    <!-- Footer Placeholder -->
-    <div id="footer-placeholder"></div>
-
-    <script src="index.js"></script>
-
-</body>
-
-</html>
+@endsection

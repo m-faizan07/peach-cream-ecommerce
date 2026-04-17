@@ -19,22 +19,22 @@
 
 <!-- Navigation Bar -->
 <nav class="navbar">
-    <a href="index.html" class="logo">
-        <img src="images/peachlogo.png" alt="Peach Cream Logo">
+    <a href="{{ route('frontend.home') }}" class="logo">
+        <img src="{{ asset('frontend/images/peachlogo.png') }}" alt="Peach Cream Logo">
     </a>
 
     <div class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="Product-page.html">Peach Cream</a>
-        <a href="About.html">About Us</a>
-        <a href="contactus.html">Contact Us</a>
+        <a href="{{ route('frontend.home') }}">Home</a>
+        <a href="{{ route('frontend.product') }}">Peach Cream</a>
+        <a href="{{ route('frontend.about') }}">About Us</a>
+        <a href="{{ route('frontend.contact') }}">Contact Us</a>
     </div>
 
     <div class="nav-actions">
-        <a href="cart.html" class="cart-btn">
+        <a href="{{ route('frontend.cart') }}" class="cart-btn">
             <i class="fa-solid fa-cart-shopping"></i>
         </a>
-        <a href="Product-page.html" class="cta-btn">Get Peach Cream</a>
+        <a href="{{ route('frontend.product') }}" class="cta-btn">Get Peach Cream</a>
         <button class="mobile-menu-btn" id="mobile-menu-open">
             <i class="fa-solid fa-bars"></i>
         </button>
@@ -49,14 +49,14 @@
         </button>
         
         <div class="mobile-menu-logo">
-            <img src="images/peachlogo.png" alt="Peach Cream Logo">
+            <img src="{{ asset('frontend/images/peachlogo.png') }}" alt="Peach Cream Logo">
         </div>
 
         <nav class="mobile-nav-links">
-            <a href="index.html">Home</a>
-            <a href="Product-page.html">Shop</a>
-            <a href="About.html">About Us</a>
-            <a href="contactus.html">Contact</a>
+            <a href="{{ route('frontend.home') }}">Home</a>
+            <a href="{{ route('frontend.product') }}">Shop</a>
+            <a href="{{ route('frontend.about') }}">About Us</a>
+            <a href="{{ route('frontend.contact') }}">Contact</a>
         </nav>
 
         <div class="mobile-menu-footer">

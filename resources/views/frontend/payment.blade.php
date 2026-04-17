@@ -1,30 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('frontend.main.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment Selection | Peach Cream</title>
-    <link rel="stylesheet" href="index.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
+@section('title', 'Payment Selection | Peach Cream')
 
-<body>
+@section('content')
     <div class="checkout-layout">
         <!-- Left: Form Section -->
         <main class="checkout-main">
             <div class="checkout-content">
                 <header class="checkout-header-centered">
-                    <a href="index.html" class="checkout-logo-centered">
+                    <a href="{{ route('frontend.home') }}" class="checkout-logo-centered">
                         <img src="images/peachlogo.png" alt="Peach Cream Logo">
                         <h1>Peach Cream</h1>
                     </a>
                     <nav class="checkout-breadcrumb-centered">
-                        <a href="cart.html">Cart</a>
+                        <a href="{{ route('frontend.cart') }}">Cart</a>
                         <span class="sep"><i class="fa-solid fa-chevron-right"></i></span>
-                        <a href="shipping.html">Information</a>
+                        <a href="{{ route('frontend.shipping') }}">Information</a>
                         <span class="sep"><i class="fa-solid fa-chevron-right"></i></span>
-                        <a href="checkout-shipping.html">Shipping</a>
+                        <a href="{{ route('frontend.checkout-shipping') }}">Shipping</a>
                         <span class="sep"><i class="fa-solid fa-chevron-right"></i></span>
                         <span class="active">Payment</span>
                     </nav>
@@ -34,17 +27,17 @@
                     <div class="review-row">
                         <span class="review-label">Contact</span>
                         <span class="review-value">raam2@gmail.com</span>
-                        <a href="shipping.html" class="review-change">change</a>
+                        <a href="{{ route('frontend.shipping') }}" class="review-change">change</a>
                     </div>
                     <div class="review-row">
                         <span class="review-label">Ship To</span>
                         <span class="review-value">cdfdf, Lahore AL 35001, United States</span>
-                        <a href="shipping.html" class="review-change">change</a>
+                        <a href="{{ route('frontend.shipping') }}" class="review-change">change</a>
                     </div>
                     <div class="review-row">
                         <span class="review-label">Method</span>
                         <span class="review-value">5 to 8 business days • FREE</span>
-                        <a href="checkout-shipping.html" class="review-change">change</a>
+                        <a href="{{ route('frontend.checkout-shipping') }}" class="review-change">change</a>
                     </div>
                 </div>
 
@@ -170,7 +163,7 @@
                 </div>
 
                 <div class="checkout-form-footer">
-                    <a href="checkout-shipping.html" class="return-link">
+                    <a href="{{ route('frontend.checkout-shipping') }}" class="return-link">
                         <i class="fa-solid fa-chevron-left"></i>
                         Return to shipping
                     </a>
@@ -236,7 +229,4 @@
         </aside>
     </div>
 
-    <script src="index.js"></script>
-</body>
-
-</html>
+@endsection

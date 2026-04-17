@@ -1,16 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('frontend.main.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About us | Peach Cream</title>
-    <link rel="stylesheet" href="index.css">
-</head>
+@section('title', 'About us | Peach Cream')
 
-<body>
-    <!-- Header Placeholder -->
-    <div id="header-placeholder"></div>
+@section('content')
 
 
 
@@ -152,7 +144,7 @@
             <div class="cta-content">
                 <h2>Ready to give your peach the care it deserves?</h2>
                 <p>Join the movement that's making perianal skincare a normal part of self-care.</p>
-                <a href="Product-page.html" class="cta-btn-large">Shop Peach Cream</a>
+                <a href="{{ route('frontend.product') }}" class="cta-btn-large">Shop Peach Cream</a>
             </div>
             <div class="cta-image">
                 <img src="images/readytogive.png" alt="Hand holding Peach Cream">
@@ -160,11 +152,4 @@
         </div>
     </section>
 
-    <!-- Footer Placeholder -->
-    <div id="footer-placeholder"></div>
-
-    <script src="index.js"></script>
-
-</body>
-
-</html>
+@endsection

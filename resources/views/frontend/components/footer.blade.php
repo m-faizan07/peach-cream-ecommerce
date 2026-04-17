@@ -15,8 +15,8 @@
 <!-- Footer Section -->
 <footer class="footer">
     <div class="footer-top">
-        <a href="index.html" class="footer-logo">
-            <img src="images/peachlogo.png" alt="Peach Cream Logo">
+        <a href="{{ route('frontend.home') }}" class="footer-logo">
+            <img src="{{ asset('frontend/images/peachlogo.png') }}" alt="Peach Cream Logo">
 
         </a>
         <p>Every area of your skin, including your peach, deserves consistent and thoughtful care. Take a more
@@ -41,8 +41,8 @@
                 <li><a href="#">Track Your Order</a></li>
                 <li><a href="#">Returns & Exchanges</a></li>
                 <li><a href="#">Shipping Information</a></li>
-                <li><a href="contactus.html">Contact Us</a></li>
-                <li><a href="About.html">About Us</a></li>
+                <li><a href="{{ route('frontend.contact') }}">Contact Us</a></li>
+                <li><a href="{{ route('frontend.about') }}">About Us</a></li>
                 <li><a href="#">Terms of Service</a></li>
                 <li><a href="#">Privacy Policy</a></li>
             </ul>
@@ -85,13 +85,13 @@
     <div class="footer-bottom">
         <div class="copyright">© 2026 All Rights Reserved</div>
         <div class="payment-icons">
-            <img src="images/american express.png" alt="">
-            <img src="images/master.png" alt="master">
-            <img src="images/ebank.png" alt="ebank">
-            <img src="images/paypall.png" alt="paypall">
-            <img src="images/discover.png" alt="discover">
-            <img src="images/visa.png" alt="visa">
-            <img src="images/wiretransfer.png" alt="wiretansfer">
+            <img src="{{ asset('frontend/images/american express.png') }}" alt="">
+            <img src="{{ asset('frontend/images/master.png') }}" alt="master">
+            <img src="{{ asset('frontend/images/ebank.png') }}" alt="ebank">
+            <img src="{{ asset('frontend/images/paypall.png') }}" alt="paypall">
+            <img src="{{ asset('frontend/images/discover.png') }}" alt="discover">
+            <img src="{{ asset('frontend/images/visa.png') }}" alt="visa">
+            <img src="{{ asset('frontend/images/wiretransfer.png') }}" alt="wiretansfer">
         </div>
 
     </div>

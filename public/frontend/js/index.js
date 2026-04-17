@@ -1,21 +1,3 @@
-// Function to load components
-async function loadComponent(elementId, filePath) {
-    try {
-        const response = await fetch(filePath);
-        if (response.ok) {
-            const content = await response.text();
-            document.getElementById(elementId).innerHTML = content;
-            return true;
-        } else {
-            console.error(`Failed to load component from ${filePath}: ${response.statusText}`);
-            return false;
-        }
-    } catch (error) {
-        console.error(`Error loading component: ${error}`);
-        return false;
-    }
-}
-
 // Carousel functionality for Trust Section
 let currentTrustSlide = 0;
 const trustTestimonials = [
@@ -90,10 +72,6 @@ function updateStoriesCarousel() {
 
 // Initialize all functionality
 async function initializeApp() {
-    // Load components first
-    const headerLoaded = await loadComponent('header-placeholder', 'components/header.html');
-    const footerLoaded = await loadComponent('footer-placeholder', 'components/footer.html');
-
     // Initialize carousels
     // Trust section carousel dots click
     const trustDots = document.querySelectorAll('.trust-section .carousel-dots .dot');

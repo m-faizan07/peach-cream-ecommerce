@@ -1,21 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('frontend.main.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Peach Cream | Product Page</title>
-    <link rel="stylesheet" href="index.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
+@section('title', 'Peach Cream | Product Page')
 
-<body>
-    <!-- Header Placeholder -->
-    <div id="header-placeholder"></div>
+@section('content')
 
     <!-- Breadcrumb -->
     <div class="breadcrumb">
-        <a href="index.html">Home</a>
+        <a href="{{ route('frontend.home') }}">Home</a>
         <span class="sep"><i class="fa-solid fa-chevron-right"></i></span>
         <span class="current">Peach Cream</span>
     </div>
@@ -83,7 +74,7 @@
                     </div>
                 </div>
 
-                <a href="cart.html" class="add-to-cart-btn"
+                <a href="{{ route('frontend.cart') }}" class="add-to-cart-btn"
                     style="text-decoration:none; display:inline-block; text-align:center;">Add To Cart</a>
 
                 <div class="trust-icons-row">
@@ -603,9 +594,6 @@
         </div>
     </section>
 
-    <!-- Footer Placeholder -->
-    <div id="footer-placeholder"></div>
-
     <script>
         function changeImg(thumb, src) {
             document.getElementById('mainImg').src = src;
@@ -642,7 +630,4 @@
             }
         }
     </script>
-    <script src="index.js"></script>
-</body>
-
-</html>
+@endsection

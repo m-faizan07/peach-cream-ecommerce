@@ -1,21 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('frontend.main.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shopping Cart | Peach Cream</title>
-    <link rel="stylesheet" href="index.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
+@section('title', 'Shopping Cart | Peach Cream')
 
-<body>
-    <!-- Header Placeholder -->
-    <div id="header-placeholder"></div>
+@section('content')
 
     <!-- Breadcrumb -->
     <div class="breadcrumb">
-        <a href="index.html">Home</a>
+        <a href="{{ route('frontend.home') }}">Home</a>
         <span class="sep"><i class="fa-solid fa-chevron-right"></i></span>
         <span class="current">Peach Cream</span>
     </div>
@@ -83,8 +74,8 @@
 
             <!-- Cart Actions -->
             <div class="cart-actions">
-                <a href="Product-page.html" class="action-btn outline">Return to product</a>
-                <a href="empty-cart.html" class="action-btn outline">Clear Shopping Cart</a>
+                <a href="{{ route('frontend.product') }}" class="action-btn outline">Return to product</a>
+                <a href="{{ route('frontend.empty-cart') }}" class="action-btn outline">Clear Shopping Cart</a>
             </div>
 
             <div class="cart-summary">
@@ -94,22 +85,16 @@
                         <span class="summary-value">$100.00</span>
                     </div>
                     <p class="summary-note">Taxes and shipping calculated at checkout.</p>
-                    <a href="shipping.html" class="checkout-btn"
+                    <a href="{{ route('frontend.shipping') }}" class="checkout-btn"
                         style="text-decoration:none; display:inline-block; text-align:center;">Check out</a>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Footer Placeholder -->
-    <div id="footer-placeholder"></div>
-
-    <script src="index.js"></script>
     <script>
         function updateCartQty(delta) {
             // Placeholder function for UI interaction
         }
     </script>
-</body>
-
-</html>
+@endsection
